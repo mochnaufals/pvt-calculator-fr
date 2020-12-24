@@ -1,6 +1,11 @@
 # pvt-calculator-fr
 PVT Calculator project for the assignment of "Fluida Reservoir" course.
 
+How to use:
+1. Download all files (including *.py and *.ui files)
+2. Install the required libraries
+3. Run <code>main.py</code>
+
 Please run main.py script with the other files in the same directory/folder.
 Libraries required to be installed:
 1. PyQt5
