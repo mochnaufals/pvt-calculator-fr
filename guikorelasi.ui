@@ -386,9 +386,6 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
           <height>16</height>
          </size>
         </property>
-        <property name="elideMode">
-         <enum>Qt::ElideNone</enum>
-        </property>
         <property name="usesScrollButtons">
          <bool>false</bool>
         </property>
@@ -452,7 +449,11 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QLineEdit" name="userNameLineEdit"/>
+                  <widget class="QLineEdit" name="userNameLineEdit">
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="companyLabel">
@@ -462,7 +463,11 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLineEdit" name="companyLineEdit"/>
+                  <widget class="QLineEdit" name="companyLineEdit">
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="3" column="0">
                   <widget class="QLabel" name="fieldLabel">
@@ -472,7 +477,11 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="3" column="1">
-                  <widget class="QLineEdit" name="fieldLineEdit"/>
+                  <widget class="QLineEdit" name="fieldLineEdit">
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="4" column="0">
                   <widget class="QLabel" name="wellLabel">
@@ -482,7 +491,11 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="4" column="1">
-                  <widget class="QLineEdit" name="wellLineEdit"/>
+                  <widget class="QLineEdit" name="wellLineEdit">
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="5" column="0">
                   <widget class="QLabel" name="reservoirLabel">
@@ -492,7 +505,11 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="5" column="1">
-                  <widget class="QLineEdit" name="reservoirLineEdit"/>
+                  <widget class="QLineEdit" name="reservoirLineEdit">
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="userIDLabel">
@@ -502,7 +519,11 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="userIDLineEdit"/>
+                  <widget class="QLineEdit" name="userIDLineEdit">
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>
@@ -573,7 +594,14 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="measuredGORScfSTBLineEdit"/>
+                  <widget class="QLineEdit" name="measuredGORScfSTBLineEdit">
+                   <property name="text">
+                    <string>1658</string>
+                   </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="gasSpecificGravityFractionLabel">
@@ -583,7 +611,14 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLineEdit" name="gasSpecificGravityFractionLineEdit"/>
+                  <widget class="QLineEdit" name="gasSpecificGravityFractionLineEdit">
+                   <property name="text">
+                    <string>0.841</string>
+                   </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="3" column="0">
                   <widget class="QLabel" name="oilGravityAPILabel">
@@ -593,7 +628,14 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="3" column="1">
-                  <widget class="QLineEdit" name="oilGravityAPILineEdit"/>
+                  <widget class="QLineEdit" name="oilGravityAPILineEdit">
+                   <property name="text">
+                    <string>40</string>
+                   </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="4" column="0">
                   <widget class="QLabel" name="reservoirTemperatureFLabel">
@@ -603,36 +645,57 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                   </widget>
                  </item>
                  <item row="4" column="1">
-                  <widget class="QLineEdit" name="reservoirTemperatureFLineEdit"/>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QLabel" name="separatorTemperatureFLabel">
+                  <widget class="QLineEdit" name="reservoirTemperatureFLineEdit">
                    <property name="text">
-                    <string>SeparatorTemperature (F)</string>
+                    <string>271.4</string>
+                   </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="1">
-                  <widget class="QLineEdit" name="separatorTemperatureFLineEdit"/>
-                 </item>
                  <item row="6" column="0">
+                  <widget class="QLabel" name="separatorTemperatureFLabel">
+                   <property name="text">
+                    <string>Separator Temperature (F)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QLineEdit" name="separatorTemperatureFLineEdit">
+                   <property name="text">
+                    <string>120</string>
+                   </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="7" column="0">
                   <widget class="QLabel" name="separatorPressurePsigLabel">
                    <property name="text">
                     <string>Separator Pressure (psig)</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="6" column="1">
-                  <widget class="QLineEdit" name="separatorPressurePsigLineEdit"/>
+                 <item row="7" column="1">
+                  <widget class="QLineEdit" name="separatorPressurePsigLineEdit">
+                   <property name="text">
+                    <string>295</string>
+                   </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
                  </item>
-                 <item row="7" column="0">
+                 <item row="8" column="0">
                   <widget class="QLabel" name="pressureStepLabel">
                    <property name="text">
                     <string>Pressure Step</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="7" column="1">
+                 <item row="8" column="1">
                   <widget class="QLineEdit" name="pressureStepLineEdit">
                    <property name="toolTip">
                     <string>For plotting the data</string>
@@ -643,6 +706,26 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                    <property name="text">
                     <string>10</string>
                    </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="reservoirPressurePsiaLabel">
+                   <property name="text">
+                    <string>Reservoir Pressure (psia)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="reservoirPressurePsiaLineEdit">
+                   <property name="text">
+                    <string>8000</string>
+                   </property>
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
                   </widget>
                  </item>
                 </layout>
@@ -650,7 +733,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
                  <item alignment="Qt::AlignLeft|Qt::AlignTop">
-                  <widget class="QCommandLinkButton" name="commandLinkButton">
+                  <widget class="QCommandLinkButton" name="ButtonNextInput">
                    <property name="cursor">
                     <cursorShape>PointingHandCursor</cursorShape>
                    </property>
@@ -672,7 +755,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
          <attribute name="title">
           <string>CHOOSE CORRELATIONS</string>
          </attribute>
-         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="2,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,2">
           <item>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="1" column="0">
@@ -688,14 +771,17 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
                <item>
-                <widget class="QRadioButton" name="radioButton_14">
+                <widget class="QRadioButton" name="radioBobGlaso">
                  <property name="text">
                   <string>Glaso</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_13">
+                <widget class="QRadioButton" name="radioBobElHoshoudy">
                  <property name="text">
                   <string>El Hoshoudy AN* and Desouky SM</string>
                  </property>
@@ -717,21 +803,24 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_7">
                <item>
-                <widget class="QRadioButton" name="radioButton_4">
+                <widget class="QRadioButton" name="radioRsVasquez">
                  <property name="text">
                   <string>Vasquez-Beggs</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_5">
+                <widget class="QRadioButton" name="radioRsGlaso">
                  <property name="text">
                   <string>Glaso</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_6">
+                <widget class="QRadioButton" name="radioRsPetroky">
                  <property name="text">
                   <string>Petroky-Fahrshad/Mahroun</string>
                  </property>
@@ -753,28 +842,31 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_3">
                <item>
-                <widget class="QRadioButton" name="radioButton">
+                <widget class="QRadioButton" name="radioPbVasquezBeggs">
                  <property name="text">
                   <string>Vasquez-Beggs</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_2">
+                <widget class="QRadioButton" name="radioPbGlaso">
                  <property name="text">
                   <string>Glaso</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_3">
+                <widget class="QRadioButton" name="radioPbMahroun">
                  <property name="text">
                   <string>Mahroun</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_19">
+                <widget class="QRadioButton" name="radioPbPetroky">
                  <property name="text">
                   <string>Petroky-Fahrshad</string>
                  </property>
@@ -796,16 +888,12 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_8">
                <item>
-                <widget class="QRadioButton" name="radioButton_8">
+                <widget class="QRadioButton" name="radioViscVasquezBeggsRobinson">
                  <property name="text">
-                  <string>Vasquez-Beggs</string>
+                  <string>Vasquez-Beggs-Robinson</string>
                  </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QRadioButton" name="radioButton_7">
-                 <property name="text">
-                  <string>Beggs-Robinson</string>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -825,21 +913,24 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_10">
                <item>
-                <widget class="QRadioButton" name="radioButton_17">
+                <widget class="QRadioButton" name="radioBoGlaso">
                  <property name="text">
                   <string>Glaso</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_16">
+                <widget class="QRadioButton" name="radioBoMahroun">
                  <property name="text">
                   <string>Mahroun</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_18">
+                <widget class="QRadioButton" name="radioBoPetroky">
                  <property name="text">
                   <string>Petroky-Fahrshad</string>
                  </property>
@@ -861,14 +952,17 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>
-                <widget class="QRadioButton" name="radioButton_11">
+                <widget class="QRadioButton" name="radioICPetroky">
                  <property name="text">
                   <string>Petroky-Fahrshad</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_10">
+                <widget class="QRadioButton" name="radioICMcCain">
                  <property name="text">
                   <string>McCain</string>
                  </property>
@@ -880,21 +974,40 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
            </layout>
           </item>
           <item>
-           <widget class="QGroupBox" name="groupBox">
-            <property name="font">
-             <font>
-              <family>Segoe UI</family>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="title">
-             <string>CORRELATION INFORMATION</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="3,1">
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="font">
+               <font>
+                <family>Segoe UI</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="title">
+               <string>Correlation Information</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item alignment="Qt::AlignHCenter|Qt::AlignTop">
+             <widget class="QCommandLinkButton" name="buttonCalcNext">
+              <property name="font">
+               <font>
+                <family>Segoe UI</family>
+                <pointsize>13</pointsize>
+               </font>
+              </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string>Calculate and Next</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -982,17 +1095,43 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                <property name="spacing">
                 <number>0</number>
                </property>
+               <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
+                <widget class="QLineEdit" name="PbLineEdit">
+                 <property name="font">
+                  <font>
+                   <family>Segoe UI</family>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>2000</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="clearButtonEnabled">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item alignment="Qt::AlignHCenter|Qt::AlignTop">
+                <widget class="QLabel" name="label_4">
+                 <property name="font">
+                  <font>
+                   <family>Segoe UI</family>
+                   <pointsize>10</pointsize>
+                   <italic>true</italic>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>psia</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
-             </item>
-             <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
-              <widget class="QPushButton" name="viewPbButton">
-               <property name="cursor">
-                <cursorShape>PointingHandCursor</cursorShape>
-               </property>
-               <property name="text">
-                <string>View Plot</string>
-               </property>
-              </widget>
              </item>
             </layout>
            </widget>
@@ -1350,10 +1489,10 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
   </action>
  </widget>
  <tabstops>
-  <tabstop>radioButton_5</tabstop>
-  <tabstop>radioButton_6</tabstop>
-  <tabstop>radioButton</tabstop>
-  <tabstop>radioButton_2</tabstop>
+  <tabstop>radioRsGlaso</tabstop>
+  <tabstop>radioRsPetroky</tabstop>
+  <tabstop>radioPbVasquezBeggs</tabstop>
+  <tabstop>radioPbGlaso</tabstop>
   <tabstop>userNameLineEdit</tabstop>
   <tabstop>userIDLineEdit</tabstop>
   <tabstop>companyLineEdit</tabstop>
@@ -1365,33 +1504,33 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
   <tabstop>gasSpecificGravityFractionLineEdit</tabstop>
   <tabstop>oilGravityAPILineEdit</tabstop>
   <tabstop>reservoirTemperatureFLineEdit</tabstop>
+  <tabstop>reservoirPressurePsiaLineEdit</tabstop>
   <tabstop>separatorTemperatureFLineEdit</tabstop>
   <tabstop>separatorPressurePsigLineEdit</tabstop>
   <tabstop>pressureStepLineEdit</tabstop>
-  <tabstop>commandLinkButton</tabstop>
-  <tabstop>ButtonTest</tabstop>
+  <tabstop>ButtonNextInput</tabstop>
   <tabstop>ButtonPrev</tabstop>
   <tabstop>ButtonNext</tabstop>
   <tabstop>MainPage</tabstop>
-  <tabstop>radioButton_3</tabstop>
-  <tabstop>radioButton_19</tabstop>
-  <tabstop>radioButton_8</tabstop>
-  <tabstop>radioButton_7</tabstop>
-  <tabstop>radioButton_17</tabstop>
-  <tabstop>radioButton_16</tabstop>
-  <tabstop>radioButton_18</tabstop>
-  <tabstop>radioButton_11</tabstop>
-  <tabstop>radioButton_10</tabstop>
+  <tabstop>radioPbMahroun</tabstop>
+  <tabstop>radioPbPetroky</tabstop>
+  <tabstop>radioViscVasquezBeggsRobinson</tabstop>
+  <tabstop>radioBoGlaso</tabstop>
+  <tabstop>radioBoMahroun</tabstop>
+  <tabstop>radioBoPetroky</tabstop>
+  <tabstop>radioICPetroky</tabstop>
+  <tabstop>radioICMcCain</tabstop>
   <tabstop>viewBoButton</tabstop>
-  <tabstop>viewPbButton</tabstop>
   <tabstop>viewBobButton</tabstop>
   <tabstop>viewRsButton</tabstop>
   <tabstop>viewViscButton</tabstop>
   <tabstop>viewICButton</tabstop>
   <tabstop>tableHasil</tabstop>
-  <tabstop>radioButton_4</tabstop>
-  <tabstop>radioButton_13</tabstop>
-  <tabstop>radioButton_14</tabstop>
+  <tabstop>radioRsVasquez</tabstop>
+  <tabstop>radioBobElHoshoudy</tabstop>
+  <tabstop>radioBobGlaso</tabstop>
+  <tabstop>buttonCalcNext</tabstop>
+  <tabstop>ButtonTest</tabstop>
  </tabstops>
  <resources/>
  <connections/>

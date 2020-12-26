@@ -1,4 +1,5 @@
 # Ngulang gara2 filenya overwrite
+# Rule of Thumb Korelasi: PASTIKAN ADA BUBBLE POINT PRESSURE PADA ARRAY!
 
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
@@ -16,6 +17,16 @@ oil_Rs = korelasi_oil.Rs()
 oil_Pb = korelasi_oil.Pb()
 oil_visc = korelasi_oil.viscosity()
 
+# Sepertinya butuh konvensi array atau dictionary agar mudah oper variabel
+# Input data:
+# 1. Measured GOR/Rsb (scf/STB)
+# 2. Gas SG (Fraction)
+# 3. Oil Gravity (API)
+# 4. Reservoir Temperature (F)
+# 5. Separator Temperature (F)
+# 6. Separator Pressure (psig) jangan lupa ubah ke psia
+# 7. Pressure step
+
 def bulat_atas_ribuan(angka):
     hasil = int(ceil(angka/1000.0))*1000
     return hasil
@@ -29,19 +40,10 @@ def transpose(matrix):
     return matrix_new
 
 class grafik():
-    def viscosity(self, windowed=False):
-        oil_API = 40
-        gas_SG = 0.841
-        Rsb = 1658
-        T_res = 271.4
-        T_sep = 120
-        P_sep = 295 + 14.7
-        Pb = oil_Pb.vasquez_beggs(oil_API=oil_API, T_sep=T_sep, T_res=T_res, P_sep=P_sep, gas_SG=gas_SG, Rsb=Rsb)
-        Rs_array = oil_Rs.vasquez_beggs(oil_API=oil_API, T_res=T_res, T_sep=T_sep, P_res=7500, P_sep=P_sep, gas_SG=gas_SG, Pb=Pb, Rsb=Rsb)
-        data = oil_visc.vasquez_beggs_robinson(oil_API=oil_API, T_res=T_res, Rs_array=Rs_array, Pb=Pb, P_res=7500, Rsb=Rsb)
-
-        print(data)
-
+    def viscosity(self, input_data, Rs_array, Pb, korelasi='vas', windowed=False):
+        Rs_array = Rs_array
+        if korelasi == 'vas':
+            data = oil_visc.vasquez_beggs_robinson(input_data, Rs_array, Pb)
         data_new = transpose(data)
 
         series = QLineSeries()
@@ -92,17 +94,10 @@ class grafik():
         chartview.setRenderHint(qtg.QPainter.Antialiasing)
         return chartview
 
-    def Rs(self, windowed=False, korelasi="vasquez_beggs"):
-        oil_API = 40
-        gas_SG = 0.841
-        Rsb = 1658
-        T_res = 271.4
-        T_sep = 120
-        P_sep = 295 + 14.7
-        Pb = oil_Pb.vasquez_beggs(oil_API=oil_API, T_sep=T_sep, T_res=T_res, P_sep=P_sep, gas_SG=gas_SG, Rsb=Rsb)
-        if korelasi == "vasquez_beggs":
-            data = oil_Rs.vasquez_beggs(oil_API=oil_API, T_res=T_res, T_sep=T_sep, P_res=7500, P_sep=P_sep, gas_SG=gas_SG, Pb=Pb, Rsb=Rsb)
+    def Rs(self, input_data, Pb, windowed=False, korelasi='vas'):
 
+        if korelasi == 'vas':
+            data = oil_Rs.vasquez_beggs(input_data, Pb)
 
         data_new = transpose(data)
 
@@ -133,8 +128,6 @@ class grafik():
         else:
             label_font.setPixelSize(10)
             label_font.setBold(False)
-
-
 
         axis_X = QValueAxis()
         axis_X.setRange(0, bulat_atas_ribuan(max(data[0])))
@@ -290,30 +283,163 @@ class MainWindow(qtw.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        # Enable the first tab only
+        self.ui.MainPage.setTabEnabled(0, True)
+        self.ui.MainPage.setTabEnabled(1, False)
+        self.ui.MainPage.setTabEnabled(2, False)
+        self.ui.MainPage.setTabEnabled(3, False)
+
+        # Set Validator for fluid data input (only numbers)
+        self.ui.measuredGORScfSTBLineEdit.setValidator(qtg.QDoubleValidator())
+        self.ui.gasSpecificGravityFractionLineEdit.setValidator(qtg.QDoubleValidator())
+        self.ui.oilGravityAPILineEdit.setValidator(qtg.QDoubleValidator())
+        self.ui.reservoirTemperatureFLineEdit.setValidator(qtg.QDoubleValidator())
+        self.ui.reservoirPressurePsiaLineEdit.setValidator(qtg.QDoubleValidator())
+        self.ui.separatorTemperatureFLineEdit.setValidator(qtg.QDoubleValidator())
+        self.ui.separatorPressurePsigLineEdit.setValidator(qtg.QDoubleValidator())
+        self.ui.pressureStepLineEdit.setValidator(qtg.QIntValidator())
+
+
+        # Make instance of new windows
         self.dialogAbout = AboutWindow()
         self.dialogBob = SecondWindow()
         self.dialogBo = SecondWindow()
         self.dialogRs = SecondWindow()
         self.dialogVisc = SecondWindow()
 
-        self.ui.ButtonTest.clicked.connect(self.cobaPakaiChart)
+        # New Navigation buttons on each page
+        self.ui.ButtonNextInput.clicked.connect(self.toTabCorr)
 
-        self.ui.ButtonNext.clicked.connect(self.nextTab)
-        self.ui.ButtonPrev.clicked.connect(self.prevTab)
-
+        # Plot on new window
         self.ui.viewBobButton.clicked.connect(self.BobWindow)
         self.ui.viewBoButton.clicked.connect(self.BoWindow)
         self.ui.viewRsButton.clicked.connect(self.RsWindow)
         self.ui.viewViscButton.clicked.connect(self.ViscWindow)
 
+        # Input user information
         self.inputInformasiUser()
+
+        # Navigation on tab 2
+        self.ui.buttonCalcNext.clicked.connect(self.inputFluidData)
+        self.ui.buttonCalcNext.clicked.connect(self.inputPilihanKorelasi)
+        self.ui.buttonCalcNext.clicked.connect(self.calculateAndViewAllPlot)
         self.ui.actionAbout_Us.triggered.connect(self.openAboutWindow)
+
+
 
         # Your code will end here
         self.showMaximized()
 
+    def toTabCorr(self):
+        self.ui.MainPage.setTabEnabled(1, True)
+        self.ui.MainPage.setCurrentIndex(1)
+
     def openAboutWindow(self):
         self.dialogAbout.show()
+
+    def inputPilihanKorelasi(self):
+        if self.ui.radioPbGlaso.isChecked() == True:
+            Pb = 'gla'
+        elif self.ui.radioPbMahroun.isChecked() == True:
+            Pb = 'mah'
+        elif self.ui.radioPbPetroky.isChecked() == True:
+            Pb = 'pet'
+        else:
+            Pb = 'vas'
+        if self.ui.radioBobGlaso.isChecked() == True:
+            Bob = 'gla'
+        else:
+            Bob = 'elh'
+        if self.ui.radioBoGlaso.isChecked() == True:
+            Bo = 'gla'
+        elif self.ui.radioBoMahroun.isChecked() == True:
+            Bo = 'mah'
+        else:
+            Bo = 'pet'
+        if self.ui.radioRsGlaso.isChecked() == True:
+            Rs = 'gla'
+        elif self.ui.radioRsPetroky.isChecked() == True:
+            Rs = 'pet'
+        else:
+            Rs = 'vas'
+        if self.ui.radioViscVasquezBeggsRobinson.isChecked() == True:
+            visc = 'vas'
+        if self.ui.radioICMcCain.isChecked() == True:
+            IC = 'pet'
+        else:
+            IC = 'mcc'
+        global input_pilihan_korelasi
+        input_pilihan_korelasi = {
+            'Pb': Pb,
+            'Bob': Bob,
+            'Bo': Bo,
+            'Rs': Rs,
+            'visc': visc,
+            'IC': IC
+        }
+
+    def calculateAndViewAllPlot(self):
+        self.ui.MainPage.setTabEnabled(2, True)
+        input_data = input_fluid_data
+        oil_API = input_data['oil_API']
+        gas_SG = input_data['gas_SG']
+        Rsb = input_data['Rsb']
+        T_res = input_data['T_res']
+        T_sep = input_data['T_sep']
+        P_sep = input_data['P_sep']
+        P_res = input_data['P_res']
+        P_step = input_data['P_step']
+
+        corr = input_pilihan_korelasi
+
+        # Penentuan Pb di sini
+        Pb = oil_Pb.vasquez_beggs(input_data)
+        global bubble_P
+        bubble_P = Pb
+
+        # Kemudian penentuan parameter yang lain
+
+        # Gas Solubility
+        if self.ui.RsLayout.isEmpty() == True:
+            self.ui.RsLayout.addWidget(grafik.Rs(self, input_data=input_data, Pb=Pb,
+                                                 korelasi=corr['Pb'], windowed=False))
+
+        global Rs_array
+        Rs_array = oil_Rs.vasquez_beggs(input_data, Pb)
+
+        # Viscosity
+        if self.ui.ViscLayout.isEmpty() == True:
+            self.ui.ViscLayout.addWidget(grafik.viscosity(self, input_data=input_data, Rs_array=Rs_array, Pb=Pb,
+                                                          korelasi=corr['visc'], windowed=False))
+        self.ui.MainPage.setCurrentIndex(2)
+
+    def inputFluidData(self):
+        def convert_to_number(masuk):
+            if ceil(float(masuk)) == float(masuk):
+                hasil = ceil(float(masuk))
+            else:
+                hasil = float(masuk)
+            return hasil
+        Rsb = convert_to_number(self.ui.measuredGORScfSTBLineEdit.text())
+        gas_SG = convert_to_number(self.ui.gasSpecificGravityFractionLineEdit.text())
+        oil_API = convert_to_number(self.ui.oilGravityAPILineEdit.text())
+        T_res = convert_to_number(self.ui.reservoirTemperatureFLineEdit.text())
+        T_sep = convert_to_number(self.ui.separatorTemperatureFLineEdit.text())
+        P_res = convert_to_number(self.ui.reservoirPressurePsiaLineEdit.text())
+        P_sep = convert_to_number(self.ui.separatorPressurePsigLineEdit.text()) + 14.7
+        P_step = convert_to_number(self.ui.pressureStepLineEdit.text())
+
+        global input_fluid_data
+        input_fluid_data = {
+            'Rsb': Rsb,
+            'gas_SG': gas_SG,
+            'oil_API': oil_API,
+            'T_res': T_res,
+            'T_sep': T_sep,
+            'P_res': P_res,
+            'P_sep': P_sep,
+            'P_step': P_step
+        }
 
     def inputInformasiUser(self):
         def ubah():
@@ -361,13 +487,22 @@ class MainWindow(qtw.QMainWindow):
 
     def ViscWindow(self):
         if self.dialogVisc.ui.LayGraph.isEmpty() == True:
-            self.dialogVisc.ui.LayGraph.addWidget(grafik.viscosity(self, windowed=True))
+            self.dialogVisc.ui.LayGraph.addWidget(grafik.viscosity(self,
+                                                                   input_data=input_fluid_data,
+                                                                   Rs_array=Rs_array,
+                                                                   Pb=bubble_P,
+                                                                   korelasi=input_pilihan_korelasi['visc'],
+                                                                   windowed=True))
         self.dialogVisc.setWindowTitle('Viscosity')
         self.dialogVisc.show()
 
     def RsWindow(self):
         if self.dialogRs.ui.LayGraph.isEmpty() == True:
-            self.dialogRs.ui.LayGraph.addWidget(grafik.Rs(self, windowed=True))
+            self.dialogRs.ui.LayGraph.addWidget(grafik.Rs(self,
+                                                          input_data=input_fluid_data,
+                                                          Pb=bubble_P,
+                                                          korelasi=input_pilihan_korelasi['Pb'],
+                                                          windowed=True))
         self.dialogRs.setWindowTitle('Gas Solubility')
         self.dialogRs.show()
 
