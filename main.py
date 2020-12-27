@@ -16,6 +16,9 @@ from fungsi_korelasi import korelasi_oil
 oil_Rs = korelasi_oil.Rs()
 oil_Pb = korelasi_oil.Pb()
 oil_visc = korelasi_oil.viscosity()
+oil_Bo = korelasi_oil.Bo()
+oil_IC = korelasi_oil.isothermal_compressibility()
+oil_Bt = korelasi_oil.Bt()
 
 # Sepertinya butuh konvensi array atau dictionary agar mudah oper variabel
 # Input data:
@@ -40,8 +43,184 @@ def transpose(matrix):
     return matrix_new
 
 class grafik():
-    def viscosity(self, input_data, Rs_array, Pb, korelasi='vas', windowed=False):
-        Rs_array = Rs_array
+    def Bt(self, input_data, korelasi='gla', windowed=False):
+        if korelasi == 'gla':
+            data = oil_Bt.glaso(input_data, Rs_array, Bo_array, bubble_P)
+
+        data_new = transpose(data)
+        series = QLineSeries()
+        for i in data_new:
+            series.append(i[0], i[1])
+
+        chart = QChart()
+        chart.addSeries(series)
+        chart.legend().hide()
+        chart.layout().setContentsMargins(0, 0, 0, 0)
+        chart.setBackgroundRoundness(0)
+
+        # Tema harus ditaruh di atas, agar label_font bisa overwrite Font-nya
+        chart.setTheme(QChart.ChartThemeLight)
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+        # chart.setAnimationEasingCurve(qtc.QEasingCurve.InSine)
+
+        label_font = qtg.QFont()
+        if windowed == True:
+            chart.setTitle('Total Formation Volume Factor (Bt)')
+            title_font = qtg.QFont()
+            title_font.setBold(True)
+            title_font.setPixelSize(18)
+            chart.setTitleFont(title_font)
+            label_font.setPixelSize(14)
+            label_font.setBold(False)
+        else:
+            label_font.setPixelSize(10)
+            label_font.setBold(False)
+
+        axis_X = QValueAxis()
+        axis_X.setRange(0, bulat_atas_ribuan(max(data[0])))
+        axis_X.setTickCount(6)
+        axis_X.setTitleText('Pressure (psia)')
+        axis_X.setTitleFont(label_font)
+        chart.addAxis(axis_X, qtc.Qt.AlignBottom)
+        series.attachAxis(axis_X)
+
+        axis_Y = QValueAxis()
+        axis_Y.setRange(0, max(data[1]))
+        axis_Y.setTickCount(5)
+        axis_Y.setTitleText('(bbl/STB)')
+        axis_Y.setTitleFont(label_font)
+        chart.addAxis(axis_Y, qtc.Qt.AlignLeft)
+        series.attachAxis(axis_Y)
+
+        chartview = QChartView(chart)
+        chartview.setRenderHint(qtg.QPainter.Antialiasing)
+        return chartview
+
+
+    def IC(self, input_data, Pb, korelasi='vas', windowed=False):
+        if korelasi == 'vas':
+            data = oil_IC.vasquez_beggs(input_data, Pb, Rs_array=Rs_array)
+        else:
+            data = oil_IC.petroky_fahrshad(input_data, Pb, Rs_array=Rs_array)
+
+        # Jadikan global IC agar bisa dipakai Bo
+        global IC_array
+        IC_array = data
+
+        # Lanjutkan perhitungan biasa
+        data_new = transpose(data)
+        series = QLineSeries()
+        for i in data_new:
+            series.append(i[0], i[1])
+
+        chart = QChart()
+        chart.addSeries(series)
+        chart.legend().hide()
+        chart.layout().setContentsMargins(0, 0, 0, 0)
+        chart.setBackgroundRoundness(0)
+
+        # Tema harus ditaruh di atas, agar label_font bisa overwrite Font-nya
+        chart.setTheme(QChart.ChartThemeLight)
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+        # chart.setAnimationEasingCurve(qtc.QEasingCurve.InSine)
+
+        label_font = qtg.QFont()
+        if windowed == True:
+            chart.setTitle('Isothermal Compressibility')
+            title_font = qtg.QFont()
+            title_font.setBold(True)
+            title_font.setPixelSize(18)
+            chart.setTitleFont(title_font)
+            label_font.setPixelSize(14)
+            label_font.setBold(False)
+        else:
+            label_font.setPixelSize(10)
+            label_font.setBold(False)
+
+        axis_X = QValueAxis()
+        axis_X.setRange(0, bulat_atas_ribuan(max(data[0])))
+        axis_X.setTickCount(6)
+        axis_X.setTitleText('Pressure (psia)')
+        axis_X.setTitleFont(label_font)
+        chart.addAxis(axis_X, qtc.Qt.AlignBottom)
+        series.attachAxis(axis_X)
+
+        axis_Y = QValueAxis()
+        axis_Y.setRange(0, max(data[1]))
+        axis_Y.setTickCount(5)
+        axis_Y.setTitleText('(1/psi)')
+        axis_Y.setTitleFont(label_font)
+        chart.addAxis(axis_Y, qtc.Qt.AlignLeft)
+        series.attachAxis(axis_Y)
+
+        chartview = QChartView(chart)
+        chartview.setRenderHint(qtg.QPainter.Antialiasing)
+        return chartview
+
+    def Bo(self, input_data, korelasi='gla', windowed='False'):
+        if korelasi == 'gla':
+            data = oil_Bo.glaso(input_data, Rs_array, IC_array, bubble_P)
+        elif korelasi == 'mar':
+            data = oil_Bo.marhoun(input_data, Rs_array, IC_array, bubble_P)
+        else:
+            data = oil_Bo.petroky_fahrshad(input_data, Rs_array, IC_array, bubble_P)
+
+        global Bo_bubble_point
+        Bo_bubble_point = max(data[1])
+
+        global Bo_array
+        Bo_array = data
+
+        data_new = transpose(data)
+        series = QLineSeries()
+        for i in data_new:
+            series.append(i[0], i[1])
+
+        chart = QChart()
+        chart.addSeries(series)
+        chart.legend().hide()
+        chart.layout().setContentsMargins(0, 0, 0, 0)
+        chart.setBackgroundRoundness(0)
+
+        # Tema harus ditaruh di atas, agar label_font bisa overwrite Font-nya
+        chart.setTheme(QChart.ChartThemeLight)
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+        # chart.setAnimationEasingCurve(qtc.QEasingCurve.InSine)
+
+        label_font = qtg.QFont()
+        if windowed == True:
+            chart.setTitle('Oil Formation Volume Factor (Bo)')
+            title_font = qtg.QFont()
+            title_font.setBold(True)
+            title_font.setPixelSize(18)
+            chart.setTitleFont(title_font)
+            label_font.setPixelSize(14)
+            label_font.setBold(False)
+        else:
+            label_font.setPixelSize(10)
+            label_font.setBold(False)
+
+        axis_X = QValueAxis()
+        axis_X.setRange(0, bulat_atas_ribuan(max(data[0])))
+        axis_X.setTickCount(6)
+        axis_X.setTitleText('Pressure (psia)')
+        axis_X.setTitleFont(label_font)
+        chart.addAxis(axis_X, qtc.Qt.AlignBottom)
+        series.attachAxis(axis_X)
+
+        axis_Y = QValueAxis()
+        axis_Y.setRange(0, max(data[1]))
+        axis_Y.setTickCount(5)
+        axis_Y.setTitleText('(bbl/STB)')
+        axis_Y.setTitleFont(label_font)
+        chart.addAxis(axis_Y, qtc.Qt.AlignLeft)
+        series.attachAxis(axis_Y)
+
+        chartview = QChartView(chart)
+        chartview.setRenderHint(qtg.QPainter.Antialiasing)
+        return chartview
+
+    def viscosity(self, input_data, Pb, korelasi='vas', windowed=False):
         if korelasi == 'vas':
             data = oil_visc.vasquez_beggs_robinson(input_data, Rs_array, Pb)
         data_new = transpose(data)
@@ -83,9 +262,9 @@ class grafik():
         series.attachAxis(axis_X)
 
         axis_Y = QValueAxis()
-        axis_Y.setRange(min(data[1]), max(data[1]))
+        axis_Y.setRange(0, max(data[1]))
         axis_Y.setTickCount(5)
-        axis_Y.setTitleText('Viscosity (cP)')
+        axis_Y.setTitleText('(cP)')
         axis_Y.setTitleFont(label_font)
         chart.addAxis(axis_Y, qtc.Qt.AlignLeft)
         series.attachAxis(axis_Y)
@@ -95,9 +274,20 @@ class grafik():
         return chartview
 
     def Rs(self, input_data, Pb, windowed=False, korelasi='vas'):
+        global Rs_array
 
         if korelasi == 'vas':
             data = oil_Rs.vasquez_beggs(input_data, Pb)
+            Rs_array = data
+        elif korelasi == 'gla':
+            data = oil_Rs.glaso(input_data, Pb)
+            Rs_array = data
+        elif korelasi == 'pet':
+            data = oil_Rs.petroky_fahrshad(input_data, Pb)
+            Rs_array = data
+        else:
+            data = oil_Rs.marhoun(input_data, Pb)
+            Rs_array = data
 
         data_new = transpose(data)
 
@@ -138,121 +328,9 @@ class grafik():
         series.attachAxis(axis_X)
 
         axis_Y = QValueAxis()
-        axis_Y.setRange(min(data[1]), bulat_atas_ribuan(max(data[1])))
+        axis_Y.setRange(0, bulat_atas_ribuan(max(data[1])))
         axis_Y.setTickCount(5)
-        axis_Y.setTitleText('Gas Solubilty (scf/STB)')
-        axis_Y.setTitleFont(label_font)
-        chart.addAxis(axis_Y, qtc.Qt.AlignLeft)
-        series.attachAxis(axis_Y)
-
-        chartview = QChartView(chart)
-        chartview.setRenderHint(qtg.QPainter.Antialiasing)
-        return chartview
-
-    def Bo(self, windowed=False):
-
-        x = []
-        y = []
-        for i_x in range(-100,100,1):
-            x.append(i_x/10)
-            y.append(erf(i_x/10))
-
-        data = [x,y]
-        data_new = transpose(data)
-
-        series = QLineSeries()
-        for l in data_new:
-            series.append(l[0], l[1])
-
-        chart = QChart()
-        chart.addSeries(series)
-        chart.legend().hide()
-        chart.layout().setContentsMargins(0, 0, 0, 0)
-        chart.setBackgroundRoundness(0)
-
-        # Tema harus ditaruh di atas, agar label_font bisa overwrite Font-nya
-        chart.setTheme(QChart.ChartThemeLight)
-        chart.setAnimationOptions(QChart.SeriesAnimations)
-        #chart.setAnimationEasingCurve(qtc.QEasingCurve.InSine)
-
-        label_font = qtg.QFont()
-        if windowed == True:
-            chart.setTitle('Formation Volume Factor (Bob)')
-            title_font = qtg.QFont()
-            title_font.setBold(True)
-            title_font.setPixelSize(18)
-            chart.setTitleFont(title_font)
-            label_font.setPixelSize(14)
-            label_font.setBold(False)
-        else:
-            label_font.setPixelSize(10)
-            label_font.setBold(False)
-
-
-
-        axis_X = QValueAxis()
-        axis_X.setRange(min(x), max(x))
-        axis_X.setTickCount(6)
-        axis_X.setTitleText('Sumbu X')
-        axis_X.setTitleFont(label_font)
-        chart.addAxis(axis_X, qtc.Qt.AlignBottom)
-        series.attachAxis(axis_X)
-
-        axis_Y = QValueAxis()
-        axis_Y.setRange(min(y), max(y))
-        axis_Y.setTickCount(5)
-        axis_Y.setTitleText('Sumbu Y')
-        axis_Y.setTitleFont(label_font)
-        chart.addAxis(axis_Y, qtc.Qt.AlignLeft)
-        series.attachAxis(axis_Y)
-
-        chartview = QChartView(chart)
-        chartview.setRenderHint(qtg.QPainter.Antialiasing)
-        return chartview
-
-    def Bob(self, windowed=False):
-        series = QLineSeries()
-        for i in range(0, 10, 1):
-            series.append(i, random.randint(1, 20))
-
-        chart = QChart()
-        chart.addSeries(series)
-        chart.legend().hide()
-        chart.layout().setContentsMargins(0, 0, 0, 0)
-        chart.setBackgroundRoundness(0)
-
-        # Tema harus ditaruh di atas, agar label_font bisa overwrite Font-nya
-        chart.setTheme(QChart.ChartThemeLight)
-        chart.setAnimationOptions(QChart.SeriesAnimations)
-        #chart.setAnimationEasingCurve(qtc.QEasingCurve.Linear)
-
-        label_font = qtg.QFont()
-        if windowed == True:
-            chart.setTitle('Formation Volume Factor (Bob)')
-            title_font = qtg.QFont()
-            title_font.setBold(True)
-            title_font.setPixelSize(18)
-            chart.setTitleFont(title_font)
-            label_font.setPixelSize(14)
-            label_font.setBold(False)
-        else:
-            label_font.setPixelSize(10)
-            label_font.setBold(False)
-
-
-
-        axis_X = QValueAxis()
-        axis_X.setRange(0, 10)
-        axis_X.setTickCount(6)
-        axis_X.setTitleText('Sumbu X')
-        axis_X.setTitleFont(label_font)
-        chart.addAxis(axis_X, qtc.Qt.AlignBottom)
-        series.attachAxis(axis_X)
-
-        axis_Y = QValueAxis()
-        axis_Y.setRange(0, 20)
-        axis_Y.setTickCount(5)
-        axis_Y.setTitleText('Sumbu Y')
+        axis_Y.setTitleText('(scf/STB)')
         axis_Y.setTitleFont(label_font)
         chart.addAxis(axis_Y, qtc.Qt.AlignLeft)
         series.attachAxis(axis_Y)
@@ -302,19 +380,20 @@ class MainWindow(qtw.QMainWindow):
 
         # Make instance of new windows
         self.dialogAbout = AboutWindow()
-        self.dialogBob = SecondWindow()
         self.dialogBo = SecondWindow()
         self.dialogRs = SecondWindow()
         self.dialogVisc = SecondWindow()
+        self.dialogIC = SecondWindow()
+        self.dialogBt = SecondWindow()
 
         # New Navigation buttons on each page
         self.ui.ButtonNextInput.clicked.connect(self.toTabCorr)
 
         # Plot on new window
-        self.ui.viewBobButton.clicked.connect(self.BobWindow)
         self.ui.viewBoButton.clicked.connect(self.BoWindow)
         self.ui.viewRsButton.clicked.connect(self.RsWindow)
         self.ui.viewViscButton.clicked.connect(self.ViscWindow)
+        self.ui.viewICButton.clicked.connect(self.ICWindow)
 
         # Input user information
         self.inputInformasiUser()
@@ -340,39 +419,41 @@ class MainWindow(qtw.QMainWindow):
     def inputPilihanKorelasi(self):
         if self.ui.radioPbGlaso.isChecked() == True:
             Pb = 'gla'
-        elif self.ui.radioPbMahroun.isChecked() == True:
-            Pb = 'mah'
+        elif self.ui.radioPbMarhoun.isChecked() == True:
+            Pb = 'mar'
         elif self.ui.radioPbPetroky.isChecked() == True:
             Pb = 'pet'
         else:
             Pb = 'vas'
-        if self.ui.radioBobGlaso.isChecked() == True:
-            Bob = 'gla'
-        else:
-            Bob = 'elh'
         if self.ui.radioBoGlaso.isChecked() == True:
             Bo = 'gla'
-        elif self.ui.radioBoMahroun.isChecked() == True:
-            Bo = 'mah'
+        elif self.ui.radioBoMarhoun.isChecked() == True:
+            Bo = 'mar'
         else:
             Bo = 'pet'
+        if self.ui.radioBtGlaso.isChecked() == True:
+            Bt = 'gla'
+        else:
+            Bt = 'mar'
         if self.ui.radioRsGlaso.isChecked() == True:
             Rs = 'gla'
         elif self.ui.radioRsPetroky.isChecked() == True:
             Rs = 'pet'
+        elif self.ui.radioRsMarhoun.isChecked() == True:
+            Rs = 'mar'
         else:
             Rs = 'vas'
         if self.ui.radioViscVasquezBeggsRobinson.isChecked() == True:
             visc = 'vas'
-        if self.ui.radioICMcCain.isChecked() == True:
-            IC = 'pet'
+        if self.ui.radioICVasquez.isChecked() == True:
+            IC = 'vas'
         else:
-            IC = 'mcc'
+            IC = 'pet'
         global input_pilihan_korelasi
         input_pilihan_korelasi = {
             'Pb': Pb,
-            'Bob': Bob,
             'Bo': Bo,
+            'Bt': Bt,
             'Rs': Rs,
             'visc': visc,
             'IC': IC
@@ -393,24 +474,69 @@ class MainWindow(qtw.QMainWindow):
         corr = input_pilihan_korelasi
 
         # Penentuan Pb di sini
-        Pb = oil_Pb.vasquez_beggs(input_data)
+        if corr['Pb'] == 'vas':
+            Pb = oil_Pb.vasquez_beggs(input_data)
+        elif corr['Pb'] == 'gla':
+            Pb = oil_Pb.glaso(input_data)
+        elif corr['Pb'] == 'mar':
+            Pb = oil_Pb.marhoun(input_data)
+        else:
+            Pb = oil_Pb.petroky_fahrshad(input_data)
         global bubble_P
         bubble_P = Pb
+        self.ui.PbLineEdit.setText(str(bubble_P))
 
         # Kemudian penentuan parameter yang lain
 
         # Gas Solubility
         if self.ui.RsLayout.isEmpty() == True:
             self.ui.RsLayout.addWidget(grafik.Rs(self, input_data=input_data, Pb=Pb,
-                                                 korelasi=corr['Pb'], windowed=False))
-
-        global Rs_array
-        Rs_array = oil_Rs.vasquez_beggs(input_data, Pb)
+                                                 korelasi=corr['Rs'], windowed=False))
+        else:
+            for i in reversed(range(self.ui.RsLayout.count())):
+                self.ui.RsLayout.itemAt(i).widget().setParent(None)
+            self.ui.RsLayout.addWidget(grafik.Rs(self, input_data=input_data, Pb=Pb,
+                                                 korelasi=corr['Rs'], windowed=False))
 
         # Viscosity
         if self.ui.ViscLayout.isEmpty() == True:
-            self.ui.ViscLayout.addWidget(grafik.viscosity(self, input_data=input_data, Rs_array=Rs_array, Pb=Pb,
+            self.ui.ViscLayout.addWidget(grafik.viscosity(self, input_data=input_data, Pb=Pb,
                                                           korelasi=corr['visc'], windowed=False))
+        else:
+            for i in reversed(range(self.ui.ViscLayout.count())):
+                self.ui.ViscLayout.itemAt(i).widget().setParent(None)
+            self.ui.ViscLayout.addWidget(grafik.viscosity(self, input_data=input_data, Pb=Pb,
+                                                          korelasi=corr['visc'], windowed=False))
+
+        # Isothermal Compressibility (c_o)
+        # c_o harus dijalankan sebelum Bo, karena butuh informasi IC_array
+        if self.ui.ICLayout.isEmpty() == True:
+            self.ui.ICLayout.addWidget(grafik.IC(self, input_data, Pb, korelasi=corr['IC']))
+        else:
+            for i in reversed(range(self.ui.ICLayout.count())):
+                self.ui.ICLayout.itemAt(i).widget().setParent(None)
+            self.ui.ICLayout.addWidget(grafik.IC(self, input_data, Pb, korelasi=corr['IC']))
+
+        # Oil Formation Volume Factor (Bo)
+        if self.ui.BoLayout.isEmpty() == True:
+            self.ui.BoLayout.addWidget(grafik.Bo(self, input_data, korelasi=corr['Bo']))
+        else:
+            for i in reversed(range(self.ui.BoLayout.count())):
+                self.ui.BoLayout.itemAt(i).widget().setParent(None)
+            self.ui.BoLayout.addWidget(grafik.Bo(self, input_data, korelasi=corr['Bo']))
+
+        # Oil FVF at Pb (Bob)
+        self.ui.BobLineEdit.setText(str(Bo_bubble_point))
+
+        # Total Formation Volume Factor (Bt)
+        if self.ui.BtLayout.isEmpty() == True:
+            self.ui.BtLayout.addWidget(grafik.Bt(self, input_data, korelasi=corr['Bt']))
+        else:
+            for i in reversed(range(self.ui.BtLayout.count())):
+                self.ui.BtLayout.itemAt(i).widget().setParent(None)
+            self.ui.BtLayout.addWidget(grafik.Bt(self, input_data, korelasi=corr['Bt']))
+
+        # Open Plot Tab
         self.ui.MainPage.setCurrentIndex(2)
 
     def inputFluidData(self):
@@ -456,7 +582,6 @@ class MainWindow(qtw.QMainWindow):
         self.ui.reservoirLineEdit.textChanged.connect(ubah)
         self.ui.userIDLineEdit.textChanged.connect(ubah)
 
-
     def cekNextPrevTab(self):
         '''
         Masih susah pakai ini, nanti aja dulu
@@ -475,25 +600,23 @@ class MainWindow(qtw.QMainWindow):
             self.ui.ButtonNext.setDisabled(True)
             self.ui.ButtonPrev.setEnabled(True)
 
-    def cobaPakaiChart(self):
-        if self.ui.BobLayout.isEmpty() == True:
-            self.ui.BobLayout.addWidget(grafik.Bob(self))
-        if self.ui.BoLayout.isEmpty() == True:
-            self.ui.BoLayout.addWidget(grafik.Bo(self))
-        if self.ui.RsLayout.isEmpty() == True:
-            self.ui.RsLayout.addWidget(grafik.Rs(self))
-        if self.ui.ViscLayout.isEmpty() == True:
-            self.ui.ViscLayout.addWidget(grafik.viscosity(self))
-
     def ViscWindow(self):
         if self.dialogVisc.ui.LayGraph.isEmpty() == True:
             self.dialogVisc.ui.LayGraph.addWidget(grafik.viscosity(self,
                                                                    input_data=input_fluid_data,
-                                                                   Rs_array=Rs_array,
                                                                    Pb=bubble_P,
                                                                    korelasi=input_pilihan_korelasi['visc'],
                                                                    windowed=True))
-        self.dialogVisc.setWindowTitle('Viscosity')
+        else:
+            for i in reversed(range(self.dialogVisc.ui.LayGraph.count())):
+                self.dialogVisc.ui.LayGraph.itemAt(i).widget().setParent(None)
+            self.dialogVisc.ui.LayGraph.addWidget(grafik.viscosity(self,
+                                                                   input_data=input_fluid_data,
+                                                                   Pb=bubble_P,
+                                                                   korelasi=input_pilihan_korelasi['visc'],
+                                                                   windowed=True))
+
+        self.dialogVisc.setWindowTitle('View Plot: Viscosity')
         self.dialogVisc.show()
 
     def RsWindow(self):
@@ -501,22 +624,65 @@ class MainWindow(qtw.QMainWindow):
             self.dialogRs.ui.LayGraph.addWidget(grafik.Rs(self,
                                                           input_data=input_fluid_data,
                                                           Pb=bubble_P,
-                                                          korelasi=input_pilihan_korelasi['Pb'],
+                                                          korelasi=input_pilihan_korelasi['Rs'],
                                                           windowed=True))
-        self.dialogRs.setWindowTitle('Gas Solubility')
+        else:
+            for i in reversed(range(self.dialogRs.ui.LayGraph.count())):
+                self.dialogRs.ui.LayGraph.itemAt(i).widget().setParent(None)
+            self.dialogRs.ui.LayGraph.addWidget(grafik.Rs(self,
+                                                          input_data=input_fluid_data,
+                                                          Pb=bubble_P,
+                                                          korelasi=input_pilihan_korelasi['Rs'],
+                                                          windowed=True))
+
+        self.dialogRs.setWindowTitle('View Plot: Gas Solubility')
         self.dialogRs.show()
 
     def BoWindow(self):
         if self.dialogBo.ui.LayGraph.isEmpty() == True:
-            self.dialogBo.ui.LayGraph.addWidget(grafik.Bo(self, windowed=True))
-        self.dialogBo.setWindowTitle('Tes')
+            self.dialogBo.ui.LayGraph.addWidget(grafik.Bo(self, input_fluid_data,
+                                                          korelasi=input_pilihan_korelasi['Bo'], windowed=True))
+        else:
+            for i in reversed(range(self.dialogBo.ui.LayGraph.count())):
+                self.dialogBo.ui.LayGraph.itemAt(i).widget().setParent(None)
+            self.dialogBo.ui.LayGraph.addWidget(grafik.Bo(self, input_fluid_data,
+                                                          korelasi=input_pilihan_korelasi['Bo'], windowed=True))
+        self.dialogBo.setWindowTitle('View Plot: Oil Formation Volume Factor (Bo)')
         self.dialogBo.show()
 
-    def BobWindow(self):
-        if self.dialogBob.ui.LayGraph.isEmpty() == True:
-            self.dialogBob.ui.LayGraph.addWidget(grafik.Bob(self, windowed=True))
-        self.dialogBob.setWindowTitle('Tes')
-        self.dialogBob.show()
+    def ICWindow(self):
+        if self.dialogIC.ui.LayGraph.isEmpty() == True:
+            self.dialogIC.ui.LayGraph.addWidget(grafik.IC(self,
+                                                          input_fluid_data,
+                                                          bubble_P,
+                                                          korelasi=input_pilihan_korelasi['IC'],
+                                                          windowed=True))
+        else:
+            for i in reversed(range(self.dialogIC.ui.LayGraph.count())):
+                self.dialogIC.ui.LayGraph.itemAt(i).widget().setParent(None)
+            self.dialogIC.ui.LayGraph.addWidget(grafik.IC(self,
+                                                          input_fluid_data,
+                                                          bubble_P,
+                                                          korelasi=input_pilihan_korelasi['IC'],
+                                                          windowed=True))
+        self.dialogIC.setWindowTitle('View Plot: Isothermal Compressibility')
+        self.dialogIC.show()
+
+    def BtWindow(self):
+        if self.dialogBt.ui.LayGraph.isEmpty() == True:
+            self.dialogBt.ui.LayGraph.addWidget(grafik.Bt(self,
+                                                          input_fluid_data,
+                                                          korelasi=input_pilihan_korelasi['Bt'],
+                                                          windowed=True))
+        else:
+            for i in reversed(range(self.dialogBt.ui.LayGraph.count())):
+                self.dialogBt.ui.LayGraph.itemAt(i).widget().setParent(None)
+            self.dialogBt.ui.LayGraph.addWidget(grafik.Bt(self,
+                                                          input_fluid_data,
+                                                          korelasi=input_pilihan_korelasi['Bt'],
+                                                          windowed=True))
+        self.dialogBt.setWindowTitle('View Plot: Total Formation Volume Factor')
+        self.dialogBt.show()
 
     def nextTab(self):
         indeks = self.ui.MainPage.currentIndex()
