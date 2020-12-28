@@ -18,7 +18,37 @@ def array_P(P_atm, step, P_res, Pb):
         P.append(j)
     return P
 
+class density:
+    # TODO: Yaudah Bt ganti density aja
+    def by_definition(self, input_data, Pb, Rs_array, Bo_array, IC_array):
+        """
+        Menghitung oil density dengan definisinya
+        Bergantung pada korelasi Rs dan Bo
+        :return: lb/cf
+        """
+        oil_API = input_data['oil_API']
+        gas_SG = input_data['gas_SG']
+
+        oil_SG = 141.5/(131.5+oil_API)
+
+        P = Rs_array[0]
+        Rs = Rs_array[1]
+        Bo = Bo_array[1]
+        c_o = IC_array[1]
+
+        rho = []
+        for i in range(len(P)):
+            if P[i]<=Pb:
+                rho_bubble = (62.4*oil_SG + 0.0136*Rs[i]*gas_SG)/Bo[i]
+                rho.append(rho_bubble)
+            else:
+                rho.append(rho_bubble*(e**(c_o[i]*(P[i]-Pb))))
+        data = [P, rho]
+        return data, rho_bubble
+
 class Bt:
+    # TODO: Bt masih belum berhasil untuk dua persamaan. Seharusnya, tidak ada yang patah.
+    # TODO: Bt juga seharusnya grafiknya terjal dari kiri atas ke kanan bawah.
     def glaso(self, input_data, Rs_array, Bo_array, Pb):
         """
         Glaso for total FVF
@@ -41,6 +71,38 @@ class Bt:
                 C = 2.9*(10**(-0.00027*Rs[i]))
                 A_star = ( ( Rs[i]*((T_res-460)**0.5)*(oil_SG**C) )/( gas_SG**0.3 ) )*(P[i]**-1.1089)
                 Bt.append(10**(0.080135 + 0.47257*log10(A_star) + 0.17351*((log10(A_star))**2)))
+            else:
+                Bt.append(Bo[i])
+        data = [P, Bt]
+        return data
+
+    def marhoun(self, input_data, Rs_array, Bo_array, Pb):
+        """
+        Marhoun for Total FVF
+        :return:
+        """
+        gas_SG = input_data['gas_SG']
+        T_res = input_data['T_res']
+        oil_API = input_data['oil_API']
+
+        T_res += 460
+        oil_SG = 141.5 / (131.5 + oil_API)
+
+        P = Rs_array[0]
+        Rs = Rs_array[1]
+        Bo = Bo_array[1]
+
+        a = 0.644516
+        b = -1.079340
+        c = 0.724874
+        d = 2.006210
+        e_marh = -0.761910
+
+        Bt = []
+        for i in range(len(P)):
+            if P[i]<=Pb:
+                F = (Rs[i]**a)*(gas_SG**b)*(oil_SG**c)*(T_res**d)*(P[i]**e_marh)
+                Bt.append(0.314693 + 0.106253*(10**-4)*F + 0.18883 * (10**-10)*(F**2))
             else:
                 Bt.append(Bo[i])
         data = [P, Bt]
@@ -73,7 +135,7 @@ class Bo:
             else:
                 Bo.append(Bob*(e**(-c_o[i]*(P[i]-Pb))))
         data = [P, Bo]
-        return data
+        return data, Bob
 
     def marhoun(self, input_data, Rs_array, IC_array, Pb):
         """
@@ -104,7 +166,7 @@ class Bo:
             else:
                 Bo.append(Bob * (e ** (-c_o[i] * (P[i] - Pb))))
         data = [P, Bo]
-        return data
+        return data, Bob
 
     def petroky_fahrshad(self, input_data, Rs_array, IC_array, Pb):
         """
@@ -130,7 +192,7 @@ class Bo:
             else:
                 Bo.append(Bob * (e ** (-c_o[i] * (P[i] - Pb))))
         data = [P, Bo]
-        return data
+        return data, Bob
 
 class Pb:
     def vasquez_beggs(self, input_data):
@@ -458,13 +520,13 @@ class isothermal_compressibility():
         Rsp = Rs_array[1]
 
         c_o = []
-
+        # TODO: Cek lagi pakai A yang mana untuk Undersaturated IC
         for i in range(len(P)):
             if P[i]<=Pb:
                 # Ini dicomment karena ragu pakai yg ini atau yg setelahnya
                 # Ini digunakan jika tahu Pb
                 # Sedangkan tidak ada data lapangan untuk Pb (hanya korelasi)
-                # A = -7.573 - 1.45*ln(P[i]) - 0.383*ln(Pb) + 1.402*ln(T_res) + 0.256*ln(oil_API) + 0.449*ln(Rsb)
+                #A = -7.573 - 1.45*ln(P[i]) - 0.383*ln(Pb) + 1.402*ln(T_res) + 0.256*ln(oil_API) + 0.449*ln(Rsb)
                 A = -7.633 - 1.497*ln(P[i]) + 1.115*ln(T_res) + 0.533*ln(oil_API) + 0.184*ln(Rsp[i])
                 # Kalau yang atas ini jika tidak tahu nilai Pb (butuh nilai Rsp)
                 c_o.append(e**(A))
@@ -493,7 +555,7 @@ class isothermal_compressibility():
         P = array_P(P_atm=14.7, step=P_step, P_res=P_res, Pb=Pb)
         Rsp = Rs_array[1]
         c_o = []
-
+        # TODO: A mengikuti dari Vasquez-Beggs
         for i in range(len(P)):
             if P[i]<=Pb:
                 A = -7.633 - 1.497 * ln(P[i]) + 1.115 * ln(T_res) + 0.533 * ln(oil_API) + 0.184 * ln(Rsp[i])
