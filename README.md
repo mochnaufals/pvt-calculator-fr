@@ -6,10 +6,12 @@ How to use:
 2. Install the required libraries. Libraries required to be installed:
     - PyQt5
     - PyQtChart
+    - Xlsxwriter
 
     > You can install those libraries by using pip commands:
     > <pre><code>pip install PyQt5</code></pre>
     > <pre><code>pip install PyQtChart</code></pre>
+    > <pre><code>pip install xlsxwriter</code></pre>
 
 3. Run <code>main.py</code>
 
