@@ -14,7 +14,7 @@ import random
 import xlsxwriter
 from math import sin, e, pi, erf, ceil
 from fungsi_korelasi import korelasi_oil
-import os, json
+import os, json, hashlib
 
 oil_Rs = korelasi_oil.Rs()
 oil_Pb = korelasi_oil.Pb()
@@ -1051,7 +1051,49 @@ class MainWindow(qtw.QMainWindow):
         except:
             pass
 
+class LoginDialog(qtw.QDialog):
+    def __init__(self, parent=None):
+        super(LoginDialog, self).__init__(parent)
+        icon = qtg.QIcon()
+        icon.addPixmap(qtg.QPixmap(":/icon/oil-barrel.svg"), qtg.QIcon.Normal, qtg.QIcon.Off)
+        self.setFixedSize(300, 150)
+        self.setWindowIcon(icon)
+        self.setWindowTitle('Fluid Properties Calculator')
+        self.label = qtw.QLabel(self)
+        self.label.setText('Enter verification code:\n'
+                           'Please ask the developer (Ferdiansyah Rahman)')
+        self.password = qtw.QLineEdit(self)
+        self.login = qtw.QPushButton('Login', self)
+        layout = qtw.QVBoxLayout(self)
+        layout.addWidget(self.label)
+        layout.addWidget(self.password)
+        layout.addWidget(self.login)
+        self.login.clicked.connect(self.handleLogin)
+
+    def handleLogin(self):
+        hash_pass = hashlib.sha256(self.password.text().encode('utf-8')).hexdigest()
+        if hash_pass == 'f80eb7deefa60ea5800fa247b5ae4e2548ff6527c8bed4acf4f8bbe85f3e71f1':
+            data = {'SHA 256 Hash Password UTF-8 Encoding': 'f80eb7deefa60ea5800fa247b5ae4e2548ff6527c8bed4acf4f8bbe85f3e71f1'}
+            with open('secure.dll', 'w') as outfile:
+                json.dump(data, outfile)
+            self.accept()
+        else:
+            qtw.QMessageBox.warning(self, 'Error', 'Wrong verification code! \n'
+                                                   'Please ask the developer for the code (Ferdiansyah Rahman)')
+
 if __name__=='__main__':
     app = qtw.QApplication(sys.argv)
-    w = MainWindow()
-    sys.exit(app.exec_())
+    try:
+        with open('secure.dll') as json_file:
+            data = json.load(json_file)
+    except:
+        data = 0
+
+    if data == 0:
+        login = LoginDialog()
+        if login.exec_() == qtw.QDialog.Accepted:
+            w = MainWindow()
+            sys.exit(app.exec_())
+    else:
+        w = MainWindow()
+        sys.exit(app.exec_())
