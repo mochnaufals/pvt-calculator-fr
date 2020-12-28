@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="icon">
+    <file>oil-barrel.svg</file>
+  </qresource>
+  <qresource prefix="logo_up">
+    <file>logo-Press.png</file>
+  </qresource>
+</RCC>

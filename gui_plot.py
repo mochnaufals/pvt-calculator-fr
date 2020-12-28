@@ -18,6 +18,9 @@ class Ui_PlotWindow(object):
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         PlotWindow.setFont(font)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icon/oil-barrel.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        PlotWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(PlotWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -41,3 +44,4 @@ class Ui_PlotWindow(object):
     def retranslateUi(self, PlotWindow):
         _translate = QtCore.QCoreApplication.translate
         PlotWindow.setWindowTitle(_translate("PlotWindow", "Plot Window"))
+import resgui_rc

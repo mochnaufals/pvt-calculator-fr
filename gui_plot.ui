@@ -18,6 +18,10 @@
   <property name="windowTitle">
    <string>Plot Window</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resgui.qrc">
+    <normaloff>:/icon/oil-barrel.svg</normaloff>:/icon/oil-barrel.svg</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="10,1">
     <item>
@@ -30,6 +34,8 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="resgui.qrc"/>
+ </resources>
  <connections/>
 </ui>

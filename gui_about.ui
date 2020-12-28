@@ -18,6 +18,10 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resgui.qrc">
+    <normaloff>:/icon/oil-barrel.svg</normaloff>:/icon/oil-barrel.svg</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,10,0,0,0,0,0,0">
    <item alignment="Qt::AlignHCenter">
     <widget class="QLabel" name="label">
@@ -224,6 +228,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="resgui.qrc"/>
+ </resources>
  <connections/>
 </ui>

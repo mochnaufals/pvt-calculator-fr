@@ -18,10 +18,14 @@
   <property name="windowTitle">
    <string>Fluid Properties Calculator</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resgui.qrc">
+    <normaloff>:/icon/oil-barrel.svg</normaloff>:/icon/oil-barrel.svg</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QHBoxLayout" name="LayoutUp" stretch="0,0,2,1,1">
+     <layout class="QHBoxLayout" name="LayoutUp" stretch="1,0,1,2,1,1">
       <item>
        <layout class="QFormLayout" name="LayTitle">
         <item row="0" column="0">
@@ -47,9 +51,6 @@
             <bold>false</bold>
             <underline>false</underline>
            </font>
-          </property>
-          <property name="text">
-           <string>Dave John</string>
           </property>
          </widget>
         </item>
@@ -77,9 +78,6 @@
             <underline>false</underline>
            </font>
           </property>
-          <property name="text">
-           <string>Oil Top Corp.</string>
-          </property>
          </widget>
         </item>
         <item row="3" column="0">
@@ -106,9 +104,6 @@
             <underline>false</underline>
            </font>
           </property>
-          <property name="text">
-           <string>Rawa Simprug Jaya</string>
-          </property>
          </widget>
         </item>
         <item row="1" column="0">
@@ -126,11 +121,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLabel" name="labelUserID">
-          <property name="text">
-           <string>1011111</string>
-          </property>
-         </widget>
+         <widget class="QLabel" name="labelUserID"/>
         </item>
        </layout>
       </item>
@@ -229,9 +220,6 @@
             <underline>false</underline>
            </font>
           </property>
-          <property name="text">
-           <string>8-A</string>
-          </property>
          </widget>
         </item>
         <item row="3" column="0">
@@ -258,9 +246,6 @@
             <underline>false</underline>
            </font>
           </property>
-          <property name="text">
-           <string>18-A-1-1</string>
-          </property>
          </widget>
         </item>
        </layout>
@@ -278,90 +263,47 @@
         </property>
        </spacer>
       </item>
+      <item alignment="Qt::AlignRight|Qt::AlignBottom">
+       <widget class="QLabel" name="label_4">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>10</pointsize>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="text">
+         <string>Developed by Petroleum Engineering students of Universitas Pertamina</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
       <item>
-       <layout class="QVBoxLayout" name="LayNav">
-        <item alignment="Qt::AlignHCenter">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Navigation Pane&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="NavButton">
-          <item>
-           <widget class="QPushButton" name="ButtonTest">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>MS Reference Sans Serif</family>
-              <pointsize>8</pointsize>
-              <weight>50</weight>
-              <italic>false</italic>
-              <bold>false</bold>
-              <stylestrategy>PreferDefault</stylestrategy>
-              <kerning>true</kerning>
-             </font>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(0, 170, 255);
-alternate-background-color: rgb(216, 253, 255);
-border-color: rgb(29, 131, 255);
-selection-color: rgb(208, 253, 255);
-selection-background-color: rgb(217, 252, 255);
-font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
-            </property>
-            <property name="text">
-             <string>Test Button</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="ButtonPrev">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="text">
-             <string>Previous Step</string>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="ButtonNext">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>40</height>
-             </size>
-            </property>
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
-            <property name="text">
-             <string>Next Step</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
+       <widget class="QLabel" name="label">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>75</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="resgui.qrc">:/logo_up/logo-Press.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -419,7 +361,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0,1">
             <item>
-             <widget class="QGroupBox" name="groupBox_9">
+             <widget class="QGroupBox" name="groupBoxUserData">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -437,7 +379,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_18">
                <item>
-                <layout class="QFormLayout" name="formLayout_4">
+                <layout class="QFormLayout" name="formUser">
                  <property name="rowWrapPolicy">
                   <enum>QFormLayout::WrapAllRows</enum>
                  </property>
@@ -450,6 +392,20 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  </item>
                  <item row="0" column="1">
                   <widget class="QLineEdit" name="userNameLineEdit">
+                   <property name="clearButtonEnabled">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="userIDLabel">
+                   <property name="text">
+                    <string>User ID</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="userIDLineEdit">
                    <property name="clearButtonEnabled">
                     <bool>true</bool>
                    </property>
@@ -511,20 +467,6 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="userIDLabel">
-                   <property name="text">
-                    <string>User ID</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="userIDLineEdit">
-                   <property name="clearButtonEnabled">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </item>
               </layout>
@@ -538,7 +480,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_8">
+             <widget class="QGroupBox" name="groupBoxInputData">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -556,7 +498,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_19" stretch="1,1">
                <item>
-                <layout class="QFormLayout" name="formLayout_3">
+                <layout class="QFormLayout" name="formData">
                  <property name="rowWrapPolicy">
                   <enum>QFormLayout::WrapLongRows</enum>
                  </property>
@@ -569,19 +511,15 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  </item>
                  <item row="0" column="1">
                   <widget class="QComboBox" name="fluidTypeComboBox">
+                   <property name="toolTip">
+                    <string>Currently only available for oil calculation</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Currently only available for oil calculation</string>
+                   </property>
                    <item>
                     <property name="text">
                      <string>Oil</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Gas</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Brine</string>
                     </property>
                    </item>
                   </widget>
@@ -595,6 +533,12 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  </item>
                  <item row="1" column="1">
                   <widget class="QLineEdit" name="measuredGORScfSTBLineEdit">
+                   <property name="toolTip">
+                    <string>Gas solubility at bubble point pressure.</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Gas solubility at bubble point pressure.</string>
+                   </property>
                    <property name="text">
                     <string>1658</string>
                    </property>
@@ -612,6 +556,12 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  </item>
                  <item row="2" column="1">
                   <widget class="QLineEdit" name="gasSpecificGravityFractionLineEdit">
+                   <property name="toolTip">
+                    <string>Value range is 0 to 1</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Value range is 0 to 1</string>
+                   </property>
                    <property name="text">
                     <string>0.841</string>
                    </property>
@@ -629,6 +579,12 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  </item>
                  <item row="3" column="1">
                   <widget class="QLineEdit" name="oilGravityAPILineEdit">
+                   <property name="toolTip">
+                    <string>Make sure it's in API</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Make sure it's in API</string>
+                   </property>
                    <property name="text">
                     <string>40</string>
                    </property>
@@ -646,6 +602,12 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  </item>
                  <item row="4" column="1">
                   <widget class="QLineEdit" name="reservoirTemperatureFLineEdit">
+                   <property name="toolTip">
+                    <string>Make sure it's in Fahrenheit</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Make sure it's in Fahrenheit</string>
+                   </property>
                    <property name="text">
                     <string>271.4</string>
                    </property>
@@ -663,6 +625,12 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  </item>
                  <item row="6" column="1">
                   <widget class="QLineEdit" name="separatorTemperatureFLineEdit">
+                   <property name="toolTip">
+                    <string>Make sure it's in Fahrenheit</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Make sure it's in Fahrenheit</string>
+                   </property>
                    <property name="text">
                     <string>120</string>
                    </property>
@@ -680,6 +648,12 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  </item>
                  <item row="7" column="1">
                   <widget class="QLineEdit" name="separatorPressurePsigLineEdit">
+                   <property name="toolTip">
+                    <string>Make sure it's in PSIG</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Make sure it's in PSIG</string>
+                   </property>
                    <property name="text">
                     <string>295</string>
                    </property>
@@ -698,7 +672,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  <item row="8" column="1">
                   <widget class="QLineEdit" name="pressureStepLineEdit">
                    <property name="toolTip">
-                    <string>For plotting the data</string>
+                    <string>For plotting the data, the lower the better (but it takes slower time to calculate)</string>
                    </property>
                    <property name="statusTip">
                     <string>Required for plotting the data, default is 10</string>
@@ -720,6 +694,12 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                  </item>
                  <item row="5" column="1">
                   <widget class="QLineEdit" name="reservoirPressurePsiaLineEdit">
+                   <property name="toolTip">
+                    <string>Make sure it's in PSIA</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Make sure it's in PSIA</string>
+                   </property>
                    <property name="text">
                     <string>8000</string>
                    </property>
@@ -734,6 +714,12 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
                  <item alignment="Qt::AlignLeft|Qt::AlignTop">
                   <widget class="QCommandLinkButton" name="ButtonNextInput">
+                   <property name="font">
+                    <font>
+                     <family>Segoe UI</family>
+                     <pointsize>14</pointsize>
+                    </font>
+                   </property>
                    <property name="cursor">
                     <cursorShape>PointingHandCursor</cursorShape>
                    </property>
@@ -758,56 +744,8 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
          <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,2">
           <item>
            <layout class="QGridLayout" name="gridLayout_2">
-            <item row="1" column="0">
-             <widget class="QGroupBox" name="groupBox_4">
-              <property name="font">
-               <font>
-                <family>Segoe UI</family>
-                <pointsize>10</pointsize>
-               </font>
-              </property>
-              <property name="title">
-               <string>Total Formation Volume Factor (Bt)</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_6">
-               <item>
-                <widget class="QRadioButton" name="radioBtGlaso">
-                 <property name="text">
-                  <string>Glaso*</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QRadioButton" name="radioBtMarhoun">
-                 <property name="text">
-                  <string>Marhoun*</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_4">
-                 <property name="font">
-                  <font>
-                   <family>Segoe UI</family>
-                   <pointsize>8</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>*) after P&gt;Pb, the value will be the same as oil FVF (Bo)</string>
-                 </property>
-                 <property name="wordWrap">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
             <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_3">
+             <widget class="QGroupBox" name="groupCorRs">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -853,7 +791,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_2">
+             <widget class="QGroupBox" name="groupCorPb">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -898,36 +836,8 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </layout>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QGroupBox" name="groupBox_5">
-              <property name="font">
-               <font>
-                <family>Segoe UI</family>
-                <pointsize>10</pointsize>
-               </font>
-              </property>
-              <property name="title">
-               <string>Viscosity</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_8">
-               <item>
-                <widget class="QRadioButton" name="radioViscVasquezBeggsRobinson">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>Vasquez-Beggs-Robinson</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QGroupBox" name="groupBox_6">
+            <item row="1" column="0">
+             <widget class="QGroupBox" name="groupCorBo">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -981,8 +891,36 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </layout>
              </widget>
             </item>
-            <item row="2" column="1">
-             <widget class="QGroupBox" name="groupBox_7">
+            <item row="2" column="0">
+             <widget class="QGroupBox" name="groupBox_5">
+              <property name="font">
+               <font>
+                <family>Segoe UI</family>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="title">
+               <string>Viscosity</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_8">
+               <item>
+                <widget class="QRadioButton" name="radioViscVasquezBeggsRobinson">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>Vasquez-Beggs-Robinson</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QGroupBox" name="groupCorIC">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -1035,7 +973,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="3,1">
+           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="4,0,1">
             <item>
              <widget class="QGroupBox" name="groupBox">
               <property name="font">
@@ -1052,12 +990,22 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QProgressBar" name="progressCalc">
+              <property name="value">
+               <number>0</number>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignHCenter|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
             <item alignment="Qt::AlignHCenter|Qt::AlignTop">
              <widget class="QCommandLinkButton" name="buttonCalcNext">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
-                <pointsize>13</pointsize>
+                <pointsize>14</pointsize>
                </font>
               </property>
               <property name="cursor">
@@ -1077,10 +1025,57 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
           <string>OUTPUT (PLOTS)</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout" rowstretch="1,1" columnstretch="0,1,1,1">
-          <item row="0" column="3">
-           <widget class="QGroupBox" name="groupBt">
+          <item row="1" column="3">
+           <widget class="QGroupBox" name="groupIC">
             <property name="title">
-             <string>Total Formation Volume Factor (Bt)</string>
+             <string>Isothermal Compressibility</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_15">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QVBoxLayout" name="ICLayout">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+              </layout>
+             </item>
+             <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
+              <widget class="QPushButton" name="viewICButton">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="text">
+                <string>View Plot</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QGroupBox" name="groupRho">
+            <property name="title">
+             <string>Oil Density</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1105,108 +1100,14 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               <number>0</number>
              </property>
              <item>
-              <layout class="QVBoxLayout" name="BtLayout">
+              <layout class="QVBoxLayout" name="RhoLayout">
                <property name="spacing">
                 <number>0</number>
                </property>
               </layout>
              </item>
              <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
-              <widget class="QPushButton" name="viewBtButton">
-               <property name="cursor">
-                <cursorShape>PointingHandCursor</cursorShape>
-               </property>
-               <property name="text">
-                <string>View Plot</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QGroupBox" name="groupRs">
-            <property name="title">
-             <string>Gas Solubility (Rs)</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_13">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <layout class="QVBoxLayout" name="RsLayout">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-              </layout>
-             </item>
-             <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
-              <widget class="QPushButton" name="viewRsButton">
-               <property name="cursor">
-                <cursorShape>PointingHandCursor</cursorShape>
-               </property>
-               <property name="text">
-                <string>View Plot</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QGroupBox" name="groupBo">
-            <property name="title">
-             <string>Oil Formation Volume Factor (Bo)</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_11">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <layout class="QVBoxLayout" name="BoLayout">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-              </layout>
-             </item>
-             <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
-              <widget class="QPushButton" name="viewBoButton">
+              <widget class="QPushButton" name="viewRhoButton">
                <property name="cursor">
                 <cursorShape>PointingHandCursor</cursorShape>
                </property>
@@ -1265,10 +1166,10 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
             </layout>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QGroupBox" name="groupIC">
+          <item row="0" column="2">
+           <widget class="QGroupBox" name="groupBo">
             <property name="title">
-             <string>Isothermal Compressibility</string>
+             <string>Oil Formation Volume Factor (Bo)</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -1276,7 +1177,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
             <property name="flat">
              <bool>true</bool>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_15">
+            <layout class="QVBoxLayout" name="verticalLayout_11">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -1293,14 +1194,61 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
               <number>0</number>
              </property>
              <item>
-              <layout class="QVBoxLayout" name="ICLayout">
+              <layout class="QVBoxLayout" name="BoLayout">
                <property name="spacing">
                 <number>0</number>
                </property>
               </layout>
              </item>
              <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
-              <widget class="QPushButton" name="viewICButton">
+              <widget class="QPushButton" name="viewBoButton">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="text">
+                <string>View Plot</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QGroupBox" name="groupRs">
+            <property name="title">
+             <string>Gas Solubility (Rs)</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_13">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QVBoxLayout" name="RsLayout">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+              </layout>
+             </item>
+             <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
+              <widget class="QPushButton" name="viewRsButton">
                <property name="cursor">
                 <cursorShape>PointingHandCursor</cursorShape>
                </property>
@@ -1314,16 +1262,6 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
           </item>
           <item row="0" column="1">
            <layout class="QVBoxLayout" name="othersLayout">
-            <item alignment="Qt::AlignHCenter">
-             <widget class="QPushButton" name="pushButton">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="text">
-               <string>Update All Plot</string>
-              </property>
-             </widget>
-            </item>
             <item>
              <widget class="Line" name="line_3">
               <property name="orientation">
@@ -1391,6 +1329,39 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
                 </property>
                </widget>
               </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="oilDensityAtPbLbCfLabel">
+                <property name="font">
+                 <font>
+                  <family>Segoe UI</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Oil Density (at Pb, lb/cf)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="RhoPbLineEdit">
+                <property name="font">
+                 <font>
+                  <family>Segoe UI</family>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QCommandLinkButton" name="viewTableOutputButton">
+                <property name="cursor">
+                 <cursorShape>PointingHandCursor</cursorShape>
+                </property>
+                <property name="text">
+                 <string>View Table Output</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
            </layout>
@@ -1401,7 +1372,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
          <attribute name="title">
           <string>OUTPUT (TABLES)</string>
          </attribute>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,1">
           <item>
            <widget class="QTableWidget" name="tableHasil">
             <property name="editTriggers">
@@ -1414,50 +1385,83 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
              <property name="text">
               <string>P (psia)</string>
              </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Bob</string>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Bo</string>
+              <string>Pb (psia)</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Rs</string>
+              <string>Bo (bbl/STB)</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Viscosity</string>
+              <string>Bob (bbl/STB)</string>
              </property>
             </column>
             <column>
              <property name="text">
-              <string>Compr.</string>
+              <string>Density (lb/cf)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Rho at Pb (lb/cf)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Rs (scf/STB)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Viscosity (cP)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Iso_Comp (1/psi)</string>
              </property>
             </column>
            </widget>
           </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <item>
-             <widget class="QProgressBar" name="progressTable">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="value">
-               <number>24</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          <item alignment="Qt::AlignTop">
+           <widget class="QGroupBox" name="groupBox_12">
+            <property name="title">
+             <string>Table Toolbar</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <widget class="QPushButton" name="goToPbButton">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="text">
+                <string>Go to Pb</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="exportDataButton">
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="text">
+                <string>Export Data..</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -1580,8 +1584,6 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
   <tabstop>separatorPressurePsigLineEdit</tabstop>
   <tabstop>pressureStepLineEdit</tabstop>
   <tabstop>ButtonNextInput</tabstop>
-  <tabstop>ButtonPrev</tabstop>
-  <tabstop>ButtonNext</tabstop>
   <tabstop>MainPage</tabstop>
   <tabstop>radioPbMarhoun</tabstop>
   <tabstop>radioPbPetroky</tabstop>
@@ -1590,7 +1592,7 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
   <tabstop>radioBoMarhoun</tabstop>
   <tabstop>radioBoPetroky</tabstop>
   <tabstop>radioICPetroky</tabstop>
-  <tabstop>viewBtButton</tabstop>
+  <tabstop>viewRhoButton</tabstop>
   <tabstop>viewBoButton</tabstop>
   <tabstop>viewRsButton</tabstop>
   <tabstop>viewViscButton</tabstop>
@@ -1598,8 +1600,9 @@ font: 8pt &quot;MS Reference Sans Serif&quot; rgb(255, 255, 255);</string>
   <tabstop>tableHasil</tabstop>
   <tabstop>radioRsVasquez</tabstop>
   <tabstop>buttonCalcNext</tabstop>
-  <tabstop>ButtonTest</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="resgui.qrc"/>
+ </resources>
  <connections/>
 </ui>

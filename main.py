@@ -8,10 +8,13 @@ from PyQt5.QtChart import QChart, QLineSeries, QChartView, QValueAxis
 from guikorelasi import Ui_MainWindow
 from gui_plot import Ui_PlotWindow
 from gui_about import Ui_AboutUsDialog
+import resgui_rc
 import sys
 import random
+import xlsxwriter
 from math import sin, e, pi, erf, ceil
 from fungsi_korelasi import korelasi_oil
+import os
 
 oil_Rs = korelasi_oil.Rs()
 oil_Pb = korelasi_oil.Pb()
@@ -19,6 +22,7 @@ oil_visc = korelasi_oil.viscosity()
 oil_Bo = korelasi_oil.Bo()
 oil_IC = korelasi_oil.isothermal_compressibility()
 oil_Bt = korelasi_oil.Bt()
+oil_rho = korelasi_oil.density()
 
 # Sepertinya butuh konvensi array atau dictionary agar mudah oper variabel
 # Input data:
@@ -34,6 +38,10 @@ def bulat_atas_ribuan(angka):
     hasil = int(ceil(angka/1000.0))*1000
     return hasil
 
+def bulat_atas_ratusan(angka):
+    hasil = int(ceil(angka/100.0))*100
+    return hasil
+
 def transpose(matrix):
     matrix_new = []
     for i in range(len(matrix[0])):
@@ -43,9 +51,72 @@ def transpose(matrix):
     return matrix_new
 
 class grafik():
+    def density(self, input_data, windowed=False):
+        global density_oil
+        global rho_at_Pb
+
+        data, rho_at_Pb = oil_rho.by_definition(input_data, bubble_P, Rs_array, Bo_array, IC_array)
+
+        density_oil = data
+
+        data_new = transpose(data)
+        series = QLineSeries()
+        for i in data_new:
+            series.append(i[0], i[1])
+
+        chart = QChart()
+        chart.addSeries(series)
+        chart.legend().hide()
+        chart.layout().setContentsMargins(0, 0, 0, 0)
+        chart.setBackgroundRoundness(0)
+
+        # Tema harus ditaruh di atas, agar label_font bisa overwrite Font-nya
+        chart.setTheme(QChart.ChartThemeLight)
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+        # chart.setAnimationEasingCurve(qtc.QEasingCurve.InSine)
+
+        label_font = qtg.QFont()
+        if windowed == True:
+            chart.setTitle('Oil Density')
+            title_font = qtg.QFont()
+            title_font.setBold(True)
+            title_font.setPixelSize(18)
+            chart.setTitleFont(title_font)
+            label_font.setPixelSize(14)
+            label_font.setBold(False)
+        else:
+            label_font.setPixelSize(10)
+            label_font.setBold(False)
+
+        axis_X = QValueAxis()
+        axis_X.setRange(0, bulat_atas_ribuan(max(data[0])))
+        axis_X.setTickCount(6)
+        axis_X.setTitleText('Pressure (psia)')
+        axis_X.setTitleFont(label_font)
+        chart.addAxis(axis_X, qtc.Qt.AlignBottom)
+        series.attachAxis(axis_X)
+
+        axis_Y = QValueAxis()
+        axis_Y.setRange(min(data[1])-0.5, max(data[1])+0.5)
+        axis_Y.setTickCount(5)
+        axis_Y.setTitleText('(lb/cf)')
+        axis_Y.setTitleFont(label_font)
+        chart.addAxis(axis_Y, qtc.Qt.AlignLeft)
+        series.attachAxis(axis_Y)
+
+        chartview = QChartView(chart)
+        chartview.setRenderHint(qtg.QPainter.Antialiasing)
+        return chartview
+
     def Bt(self, input_data, korelasi='gla', windowed=False):
         if korelasi == 'gla':
             data = oil_Bt.glaso(input_data, Rs_array, Bo_array, bubble_P)
+        else:
+            data = oil_Bt.marhoun(input_data, Rs_array, Bo_array, bubble_P)
+
+        # Untuk dimasukkan ke tabel
+        global Bt_array
+        Bt_array = data
 
         data_new = transpose(data)
         series = QLineSeries()
@@ -146,7 +217,7 @@ class grafik():
         series.attachAxis(axis_X)
 
         axis_Y = QValueAxis()
-        axis_Y.setRange(0, max(data[1]))
+        axis_Y.setRange(0, max(data[1])/10)
         axis_Y.setTickCount(5)
         axis_Y.setTitleText('(1/psi)')
         axis_Y.setTitleFont(label_font)
@@ -158,15 +229,14 @@ class grafik():
         return chartview
 
     def Bo(self, input_data, korelasi='gla', windowed='False'):
-        if korelasi == 'gla':
-            data = oil_Bo.glaso(input_data, Rs_array, IC_array, bubble_P)
-        elif korelasi == 'mar':
-            data = oil_Bo.marhoun(input_data, Rs_array, IC_array, bubble_P)
-        else:
-            data = oil_Bo.petroky_fahrshad(input_data, Rs_array, IC_array, bubble_P)
-
         global Bo_bubble_point
-        Bo_bubble_point = max(data[1])
+
+        if korelasi == 'gla':
+            data, Bo_bubble_point = oil_Bo.glaso(input_data, Rs_array, IC_array, bubble_P)
+        elif korelasi == 'mar':
+            data, Bo_bubble_point = oil_Bo.marhoun(input_data, Rs_array, IC_array, bubble_P)
+        else:
+            data, Bo_bubble_point = oil_Bo.petroky_fahrshad(input_data, Rs_array, IC_array, bubble_P)
 
         global Bo_array
         Bo_array = data
@@ -209,7 +279,7 @@ class grafik():
         series.attachAxis(axis_X)
 
         axis_Y = QValueAxis()
-        axis_Y.setRange(0, max(data[1]))
+        axis_Y.setRange(min(data[1])-0.1, max(data[1])+0.1)
         axis_Y.setTickCount(5)
         axis_Y.setTitleText('(bbl/STB)')
         axis_Y.setTitleFont(label_font)
@@ -223,6 +293,10 @@ class grafik():
     def viscosity(self, input_data, Pb, korelasi='vas', windowed=False):
         if korelasi == 'vas':
             data = oil_visc.vasquez_beggs_robinson(input_data, Rs_array, Pb)
+
+        global visc_array
+        visc_array = data
+
         data_new = transpose(data)
 
         series = QLineSeries()
@@ -328,7 +402,7 @@ class grafik():
         series.attachAxis(axis_X)
 
         axis_Y = QValueAxis()
-        axis_Y.setRange(0, bulat_atas_ribuan(max(data[1])))
+        axis_Y.setRange(0, bulat_atas_ratusan(max(data[1])))
         axis_Y.setTickCount(5)
         axis_Y.setTitleText('(scf/STB)')
         axis_Y.setTitleFont(label_font)
@@ -347,6 +421,17 @@ class SecondWindow(qtw.QMainWindow):
         # Kode plot window
         #self.setWindowTitle('Fluid Properties Calculator - {}'.format(nama_window))
         #self.ui.LayGraph.addWidget(chart_widget)
+
+class WarningWindow(qtw.QMessageBox):
+    def __init__(self):
+        super(WarningWindow, self).__init__()
+        icon = qtg.QIcon()
+        icon.addPixmap(qtg.QPixmap(":/icon/oil-barrel.svg"), qtg.QIcon.Normal, qtg.QIcon.Off)
+        self.setWindowIcon(icon)
+        self.setIcon(qtw.QMessageBox.Warning)
+        self.setText('Input fields cannot be empty!')
+        self.setWindowTitle('Warning Message')
+        self.setStandardButtons(qtw.QMessageBox.Ok)
 
 class AboutWindow(qtw.QDialog):
     def __init__(self):
@@ -377,6 +462,8 @@ class MainWindow(qtw.QMainWindow):
         self.ui.separatorPressurePsigLineEdit.setValidator(qtg.QDoubleValidator())
         self.ui.pressureStepLineEdit.setValidator(qtg.QIntValidator())
 
+        # Make sure that the input changes will disable the plot and table tab
+        self.detectAllInputChanges()
 
         # Make instance of new windows
         self.dialogAbout = AboutWindow()
@@ -384,9 +471,10 @@ class MainWindow(qtw.QMainWindow):
         self.dialogRs = SecondWindow()
         self.dialogVisc = SecondWindow()
         self.dialogIC = SecondWindow()
-        self.dialogBt = SecondWindow()
+        self.dialogRho = SecondWindow()
+        self.dialogWarning = WarningWindow()
 
-        # New Navigation buttons on each page
+        # New Navigation buttons on first page
         self.ui.ButtonNextInput.clicked.connect(self.toTabCorr)
 
         # Plot on new window
@@ -394,6 +482,8 @@ class MainWindow(qtw.QMainWindow):
         self.ui.viewRsButton.clicked.connect(self.RsWindow)
         self.ui.viewViscButton.clicked.connect(self.ViscWindow)
         self.ui.viewICButton.clicked.connect(self.ICWindow)
+        self.ui.viewRhoButton.clicked.connect(self.RhoWindow)
+
 
         # Input user information
         self.inputInformasiUser()
@@ -404,14 +494,72 @@ class MainWindow(qtw.QMainWindow):
         self.ui.buttonCalcNext.clicked.connect(self.calculateAndViewAllPlot)
         self.ui.actionAbout_Us.triggered.connect(self.openAboutWindow)
 
+        # Navigation to tab table
+        self.ui.viewTableOutputButton.clicked.connect(self.bukaTabTable)
 
+        # Highlight Pb Row at table
+        self.ui.goToPbButton.clicked.connect(self.highlightRowPb)
+
+        # Export table to excel
+        self.ui.exportDataButton.clicked.connect(self.exportTableToExcel)
 
         # Your code will end here
         self.showMaximized()
 
+
+    def detectAllInputChanges(self):
+        def lakukan(what):
+            def matikan():
+                self.ui.MainPage.setTabEnabled(2, False)
+                self.ui.MainPage.setTabEnabled(3, False)
+            what.textEdited.connect(matikan)
+
+        su = self.ui
+        lakukan(su.measuredGORScfSTBLineEdit)
+        lakukan(su.gasSpecificGravityFractionLineEdit)
+        lakukan(su.oilGravityAPILineEdit)
+        lakukan(su.reservoirTemperatureFLineEdit)
+        lakukan(su.reservoirPressurePsiaLineEdit)
+        lakukan(su.separatorTemperatureFLineEdit)
+        lakukan(su.separatorPressurePsigLineEdit)
+        lakukan(su.pressureStepLineEdit)
+
+        def bagianDua(masuk):
+            def coba(what):
+                try:
+                    def anu():
+                        self.ui.MainPage.setTabEnabled(2, False)
+                        self.ui.MainPage.setTabEnabled(3, False)
+                    what.pressed.connect(anu)
+                except:
+                    pass
+            for i in masuk.children():
+                coba(i)
+
+        bagianDua(su.groupCorPb)
+        bagianDua(su.groupCorBo)
+        bagianDua(su.groupCorRs)
+        bagianDua(su.groupCorIC)
+
     def toTabCorr(self):
-        self.ui.MainPage.setTabEnabled(1, True)
-        self.ui.MainPage.setCurrentIndex(1)
+        def cekPanjang(what, what2):
+            panjang = 1
+            for i in what.children():
+                try:
+                    panjang *= len(i.text())
+                except:
+                    pass
+            for i in what2.children():
+                try:
+                    panjang *= len(i.text())
+                except:
+                    pass
+            if panjang == 0:
+                self.dialogWarning.show()
+            else:
+                self.ui.MainPage.setTabEnabled(1, True)
+                self.ui.MainPage.setCurrentIndex(1)
+        cekPanjang(self.ui.groupBoxInputData, self.ui.groupBoxUserData)
 
     def openAboutWindow(self):
         self.dialogAbout.show()
@@ -431,10 +579,6 @@ class MainWindow(qtw.QMainWindow):
             Bo = 'mar'
         else:
             Bo = 'pet'
-        if self.ui.radioBtGlaso.isChecked() == True:
-            Bt = 'gla'
-        else:
-            Bt = 'mar'
         if self.ui.radioRsGlaso.isChecked() == True:
             Rs = 'gla'
         elif self.ui.radioRsPetroky.isChecked() == True:
@@ -453,7 +597,6 @@ class MainWindow(qtw.QMainWindow):
         input_pilihan_korelasi = {
             'Pb': Pb,
             'Bo': Bo,
-            'Bt': Bt,
             'Rs': Rs,
             'visc': visc,
             'IC': IC
@@ -484,6 +627,7 @@ class MainWindow(qtw.QMainWindow):
             Pb = oil_Pb.petroky_fahrshad(input_data)
         global bubble_P
         bubble_P = Pb
+        self.ui.PbLineEdit.clear()
         self.ui.PbLineEdit.setText(str(bubble_P))
 
         # Kemudian penentuan parameter yang lain
@@ -526,18 +670,37 @@ class MainWindow(qtw.QMainWindow):
             self.ui.BoLayout.addWidget(grafik.Bo(self, input_data, korelasi=corr['Bo']))
 
         # Oil FVF at Pb (Bob)
+        self.ui.BobLineEdit.clear()
         self.ui.BobLineEdit.setText(str(Bo_bubble_point))
 
         # Total Formation Volume Factor (Bt)
-        if self.ui.BtLayout.isEmpty() == True:
-            self.ui.BtLayout.addWidget(grafik.Bt(self, input_data, korelasi=corr['Bt']))
+        #if self.ui.BtLayout.isEmpty() == True:
+        #    self.ui.BtLayout.addWidget(grafik.Bt(self, input_data, korelasi=corr['Bt']))
+        #else:
+        #    for i in reversed(range(self.ui.BtLayout.count())):
+        #        self.ui.BtLayout.itemAt(i).widget().setParent(None)
+        #    self.ui.BtLayout.addWidget(grafik.Bt(self, input_data, korelasi=corr['Bt']))
+
+        # Oil Density
+        if self.ui.RhoLayout.isEmpty() == True:
+            self.ui.RhoLayout.addWidget(grafik.density(self, input_data))
         else:
-            for i in reversed(range(self.ui.BtLayout.count())):
-                self.ui.BtLayout.itemAt(i).widget().setParent(None)
-            self.ui.BtLayout.addWidget(grafik.Bt(self, input_data, korelasi=corr['Bt']))
+            for i in reversed(range(self.ui.RhoLayout.count())):
+                self.ui.RhoLayout.itemAt(i).widget().setParent(None)
+            self.ui.RhoLayout.addWidget(grafik.density(self, input_data))
+
+        # Oil Density at Pb
+        self.ui.RhoPbLineEdit.clear()
+        self.ui.RhoPbLineEdit.setText(str(rho_at_Pb))
+
+        # Output data to table
+        self.outputDataToTable()
 
         # Open Plot Tab
         self.ui.MainPage.setCurrentIndex(2)
+
+        # Enable Table Tab (uji coba)
+        self.ui.MainPage.setTabEnabled(3, True)
 
     def inputFluidData(self):
         def convert_to_number(masuk):
@@ -668,21 +831,78 @@ class MainWindow(qtw.QMainWindow):
         self.dialogIC.setWindowTitle('View Plot: Isothermal Compressibility')
         self.dialogIC.show()
 
-    def BtWindow(self):
-        if self.dialogBt.ui.LayGraph.isEmpty() == True:
-            self.dialogBt.ui.LayGraph.addWidget(grafik.Bt(self,
-                                                          input_fluid_data,
-                                                          korelasi=input_pilihan_korelasi['Bt'],
-                                                          windowed=True))
+    def RhoWindow(self):
+        if self.dialogRho.ui.LayGraph.isEmpty() == True:
+            self.dialogRho.ui.LayGraph.addWidget(grafik.density(self, input_fluid_data, windowed=True))
         else:
-            for i in reversed(range(self.dialogBt.ui.LayGraph.count())):
-                self.dialogBt.ui.LayGraph.itemAt(i).widget().setParent(None)
-            self.dialogBt.ui.LayGraph.addWidget(grafik.Bt(self,
-                                                          input_fluid_data,
-                                                          korelasi=input_pilihan_korelasi['Bt'],
-                                                          windowed=True))
-        self.dialogBt.setWindowTitle('View Plot: Total Formation Volume Factor')
-        self.dialogBt.show()
+            for i in reversed(range(self.dialogRho.ui.LayGraph.count())):
+                self.dialogRho.ui.LayGraph.itemAt(i).widget().setParent(None)
+            self.dialogRho.ui.LayGraph.addWidget(grafik.density(self, input_fluid_data, windowed=True))
+        self.dialogRho.setWindowTitle('View Plot: Oil Density')
+        self.dialogRho.show()
+
+    def bukaTabTable(self):
+        self.ui.MainPage.setCurrentIndex(3)
+
+    def exportTableToExcel(self):
+        nama = self.ui.userNameLineEdit.text()
+        company = self.ui.companyLineEdit.text()
+        field = self.ui.fieldLineEdit.text()
+        reservoir = self.ui.reservoirLineEdit.text()
+        well = self.ui.wellLineEdit.text()
+        file_dir, jenis = qtw.QFileDialog.getSaveFileName(self,
+                                                          'Save PVT Output Data',
+                                                          os.path.expanduser('~/PVT_{}_{}_F{}_R{}_W{}'.format(
+                                                              nama, company, field, reservoir, well
+                                                          )),
+                                                          'Microsoft Excel Workbook (*.xlsx)',)
+        try:
+            workbook = xlsxwriter.Workbook(file_dir)
+            worksheet1 = workbook.add_worksheet('PVT Data')
+
+            data = [['P (psia)', 'Pb (psia)', 'Bo (bbl/STB)', 'Bob (bbl/STB)', 'Density (lb/cf)',
+                    'Rho at Pb (lb/cf)', 'Rs (scf/STB)', 'Viscosity (cP)', 'Iso_Comp (1/psi)']]
+            for i in range(len(Rs_array[0])):
+                data.append([Rs_array[0][i], bubble_P, Bo_array[1][i], Bo_bubble_point,
+                               density_oil[1][i], rho_at_Pb, Rs_array[1][i], visc_array[1][i], IC_array[1][i]])
+
+            row = range(len(data))
+            col = range(len(data[0]))
+
+            for i in row:
+                for j in col:
+                    item = data[i][j]
+                    worksheet1.write(i, j, item)
+            workbook.close()
+        except:
+            pass
+
+    def outputDataToTable(self):
+        """
+        Method untuk memasukkan data hasil ke tabel
+        Mengumpulkan semua data ke dalam sebuah matriks
+        Kemudian data dimasukkan dengan fillTableData
+        :return:
+        """
+        # Cek dulu
+        table = self.ui.tableHasil
+        matrix_data = []
+
+        self.ui.tableHasil.setRowCount(len(Rs_array[0]))
+        for i in range(len(Rs_array[0])):
+            matrix_data.append([Rs_array[0][i], bubble_P, Bo_array[1][i], Bo_bubble_point,
+                           density_oil[1][i], rho_at_Pb, Rs_array[1][i], visc_array[1][i], IC_array[1][i]])
+
+        global output_table_data
+        output_table_data = matrix_data
+
+        self.fillTableData(table, matrix_data)
+        header = self.ui.tableHasil.horizontalHeader()
+        for i in range(header.count()):
+            header.setSectionResizeMode(i, qtw.QHeaderView.ResizeToContents)
+
+    def highlightRowPb(self):
+        self.ui.tableHasil.selectRow(row_Pb_position)
 
     def nextTab(self):
         indeks = self.ui.MainPage.currentIndex()
@@ -696,14 +916,18 @@ class MainWindow(qtw.QMainWindow):
         # THIS FUNCTION IS CONSIDERED AS FASTER THAN addTableRow
         # This function will fill the existing table
         # Please make sure that the empty rows are already been made
+        # Including highlighting Pb row
         row = range(0,len(matrix_data), 1)
         col = range(0,len(matrix_data[0]), 1)
+        global row_Pb_position
         for i in row:
             for j in col:
                 item = matrix_data[i][j]
                 cell = qtw.QTableWidgetItem(str(item))
                 table.setItem(i, j, cell)
-                self.ui.progressTable.setValue(int((i/(len(matrix_data)-1))*100))
+                if matrix_data[i][0] == bubble_P:
+                    row_Pb_position = i
+                self.ui.progressCalc.setValue(int(i/(len(matrix_data)-1)*100))
 
 if __name__=='__main__':
     app = qtw.QApplication(sys.argv)

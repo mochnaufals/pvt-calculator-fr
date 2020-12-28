@@ -18,6 +18,9 @@ class Ui_AboutUsDialog(object):
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         AboutUsDialog.setFont(font)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icon/oil-barrel.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        AboutUsDialog.setWindowIcon(icon)
         self.verticalLayout = QtWidgets.QVBoxLayout(AboutUsDialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.label = QtWidgets.QLabel(AboutUsDialog)
@@ -159,3 +162,4 @@ class Ui_AboutUsDialog(object):
         self.label_10.setText(_translate("AboutUsDialog", "This program is originally developed to fulfill the final assignment of \'Fluida Reservoir\' course."))
         self.label_11.setText(_translate("AboutUsDialog", "Resources:"))
         self.label_12.setText(_translate("AboutUsDialog", "Icon made by www.flaticon.com"))
+import resgui_rc
