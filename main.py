@@ -14,7 +14,7 @@ import random
 import xlsxwriter
 from math import sin, e, pi, erf, ceil
 from fungsi_korelasi import korelasi_oil
-import os
+import os, json
 
 oil_Rs = korelasi_oil.Rs()
 oil_Pb = korelasi_oil.Pb()
@@ -503,6 +503,13 @@ class MainWindow(qtw.QMainWindow):
         # Export table to excel
         self.ui.exportDataButton.clicked.connect(self.exportTableToExcel)
 
+        # Save config file
+        self.ui.actionSave_As.triggered.connect(self.saveConfigAs)
+        self.ui.actionSave_Config.triggered.connect(self.saveConfig)
+
+        # Open config file
+        self.ui.actionOpen_Config.triggered.connect(self.openConfig)
+
         # Your code will end here
         self.showMaximized()
 
@@ -928,6 +935,121 @@ class MainWindow(qtw.QMainWindow):
                 if matrix_data[i][0] == bubble_P:
                     row_Pb_position = i
                 self.ui.progressCalc.setValue(int(i/(len(matrix_data)-1)*100))
+
+    def _saveConfigFile(self, direktori):
+        data = {}
+        data['user_info'] = {
+            'name': self.ui.userNameLineEdit.text(),
+            'id': self.ui.userIDLineEdit.text(),
+            'company': self.ui.companyLineEdit.text(),
+            'field': self.ui.fieldLineEdit.text(),
+            'well': self.ui.wellLineEdit.text(),
+            'reservoir': self.ui.reservoirLineEdit.text()
+        }
+        data['fluid_data'] = {
+            'Rsb': self.ui.measuredGORScfSTBLineEdit.text(),
+            'gas_SG': self.ui.gasSpecificGravityFractionLineEdit.text(),
+            'oil_API': self.ui.oilGravityAPILineEdit.text(),
+            'T_res': self.ui.reservoirTemperatureFLineEdit.text(),
+            'P_res': self.ui.reservoirPressurePsiaLineEdit.text(),
+            'T_sep': self.ui.separatorTemperatureFLineEdit.text(),
+            'P_sep': self.ui.separatorPressurePsigLineEdit.text(),
+            'P_step': self.ui.pressureStepLineEdit.text()
+        }
+        self.inputPilihanKorelasi()
+        data['corr'] = input_pilihan_korelasi
+
+        try:
+            with open(direktori, 'w') as outfile:
+                json.dump(data, outfile)
+        except:
+            pass
+
+    def saveConfigAs(self):
+        nama = self.ui.userNameLineEdit.text()
+        company = self.ui.companyLineEdit.text()
+        field = self.ui.fieldLineEdit.text()
+        reservoir = self.ui.reservoirLineEdit.text()
+        well = self.ui.wellLineEdit.text()
+        global file_input_config_dir
+        file_input_config_dir, jenis = qtw.QFileDialog.getSaveFileName(self,
+                                                          'Save PVT Input Config',
+                                                          os.path.expanduser('~/PVTConfig_{}_{}_F{}_R{}_W{}'.format(
+                                                              nama, company, field, reservoir, well
+                                                          )),
+                                                          'PVT Config File (*.pvtc)', )
+        self._saveConfigFile(file_input_config_dir)
+
+    def saveConfig(self):
+        try:
+            self._saveConfigFile(file_input_config_dir)
+        except:
+            self.saveConfigAs()
+
+    def openConfig(self):
+        try:
+            try:
+                dir_awal = file_input_config_dir
+            except:
+                dir_awal = os.path.expanduser('~/')
+            filedir, jenis = qtw.QFileDialog.getOpenFileName(self,
+                                                             'Open PVT Input Config File',
+                                                             dir_awal,
+                                                             'PVT Config File (*.pvtc)')
+            with open(filedir) as json_file:
+                data = json.load(json_file)
+            user = data['user_info']
+            self.ui.userNameLineEdit.setText(user['name'])
+            self.ui.userIDLineEdit.setText(user['id'])
+            self.ui.companyLineEdit.setText(user['company'])
+            self.ui.fieldLineEdit.setText(user['field'])
+            self.ui.reservoirLineEdit.setText(user['reservoir'])
+            self.ui.wellLineEdit.setText(user['well'])
+            fluid = data['fluid_data']
+            self.ui.measuredGORScfSTBLineEdit.setText(fluid['Rsb'])
+            self.ui.gasSpecificGravityFractionLineEdit.setText(fluid['gas_SG'])
+            self.ui.oilGravityAPILineEdit.setText(fluid['oil_API'])
+            self.ui.reservoirTemperatureFLineEdit.setText(fluid['T_res'])
+            self.ui.reservoirPressurePsiaLabel.setText(fluid['P_res'])
+            self.ui.separatorTemperatureFLineEdit.setText(fluid['T_sep'])
+            self.ui.separatorPressurePsigLineEdit.setText(fluid['P_sep'])
+            self.ui.pressureStepLineEdit.setText(fluid['P_step'])
+            corr = data['corr']
+            Pb = corr['Pb']
+            Bo = corr['Bo']
+            Rs = corr['Rs']
+            IC = corr['IC']
+            visc = corr['visc']
+            if Pb == 'vas':
+                self.ui.radioPbVasquezBeggs.setChecked(True)
+            elif Pb == 'gla':
+                self.ui.radioPbGlaso.setChecked(True)
+            elif Pb == 'mar':
+                self.ui.radioPbMarhoun.setChecked(True)
+            else:
+                self.ui.radioPbPetroky.setChecked(True)
+            if Bo == 'gla':
+                self.ui.radioBoGlaso.setChecked(True)
+            elif Bo == 'mar':
+                self.ui.radioBoMarhoun.setChecked(True)
+            else:
+                self.ui.radioBoPetroky.setChecked(True)
+            if Rs == 'vas':
+                self.ui.radioRsVasquez.setChecked(True)
+            elif Rs == 'gla':
+                self.ui.radioRsGlaso.setChecked(True)
+            elif Rs == 'mar':
+                self.ui.radioRsMarhoun.setChecked(True)
+            else:
+                self.ui.radioRsPetroky.setChecked(True)
+            if IC == 'vas':
+                self.ui.radioICVasquez.setChecked(True)
+            else:
+                self.ui.radioICPetroky.setChecked(True)
+            if visc == 'vas':
+                self.ui.radioViscVasquezBeggsRobinson.setChecked(True)
+        except:
+            pass
 
 if __name__=='__main__':
     app = qtw.QApplication(sys.argv)
